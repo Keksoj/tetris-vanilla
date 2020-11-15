@@ -1,27 +1,11 @@
-function tickDown(tetromino) {
-    for (i = 0; i < 4; i++) {
-        tetromino.blocks[i].y -= 1;
-    }
-}
-function pushLeft(tetromino) {
-    for (i = 0; i < 4; i++) {
-        tetromino.blocks[i].x -= 1;
-    }
-}
-function pushRight(tetromino) {
-    for (i = 0; i < 4; i++) {
-        tetromino.blocks[i].x += 1;
-    }
-}
-
 /**
  * A group a four blocks to move around
  * @typedef {object} Tetromino
  * @property {Number} spin
  * @property {[{x: number, y: number}]} blocks
- * 
+ *
  */
-class Tetromino {
+export default class Tetromino {
     /**
      * all possible coordinates for Tetrominoes
      * @type {[{x: number, y: number}]} coordinates
@@ -51,12 +35,13 @@ class Tetromino {
         this.spin = 0;
         this.blocks = this.blockCoordinates[type];
     }
-
-    tickDown() {
+    /** Push to the bottom */
+    pushDown() {
         for (var i = 0; i < 4; i++) {
             this.blocks[i].y -= 1;
         }
     }
+    /** Push to the left */
     pushLeft() {
         for (var i = 0; i < 4; i++) {
             this.blocks[i].x -= 1;
@@ -68,29 +53,23 @@ class Tetromino {
             this.blocks[i].x += 1;
         }
     }
-    /** draw the tetromino on the canvas */
+
+    /** draw the tetromino on the canvas
+     * @param {CanvasRenderingContext2D} ctx
+     * @param {Number} blockSize
+     */
     draw(ctx, blockSize) {
         ctx.save();
         ctx.fillStyle = "#ff0000";
         for (var i = 0; i < 4; i++) {
             ctx.fillRect(
-                this.blocks[i].x * 30,
-                this.blocks[i].y * 30,
+                this.blocks[i].x * blockSize,
+                this.blocks[i].y * blockSize,
                 blockSize,
                 blockSize
             );
         }
+
         ctx.restore();
     }
 }
-
-class truc extends Tetromino {
-    constructor() {
-        super("t");
-    }
-}
-
-const sayhi = () => {
-    console.log("hi");
-};
-export { sayhi, Tetromino };
