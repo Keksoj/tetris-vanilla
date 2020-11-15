@@ -53,28 +53,29 @@ class Tetromino {
     }
 
     tickDown() {
-        for (i = 0; i < 4; i++) {
+        for (var i = 0; i < 4; i++) {
             this.blocks[i].y -= 1;
         }
     }
     pushLeft() {
-        for (i = 0; i < 4; i++) {
+        for (var i = 0; i < 4; i++) {
             this.blocks[i].x -= 1;
         }
     }
+    /** Push to the right */
     pushRight() {
-        for (i = 0; i < 4; i++) {
+        for (var i = 0; i < 4; i++) {
             this.blocks[i].x += 1;
         }
     }
-
+    /** draw the tetromino on the canvas */
     draw(ctx, blockSize) {
         ctx.save();
         ctx.fillStyle = "#ff0000";
-        for (i = 0; i < 4; i++) {
+        for (var i = 0; i < 4; i++) {
             ctx.fillRect(
-                this.blocks[i].x,
-                this.blocks[i].y,
+                this.blocks[i].x * 30,
+                this.blocks[i].y * 30,
                 blockSize,
                 blockSize
             );

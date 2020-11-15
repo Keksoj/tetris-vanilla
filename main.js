@@ -31,6 +31,7 @@ start();
 function start() {
     game.score = 5;
     game.tetromino = new Tetromino();
-    console.log(game);
-    game.tetromino;
+    game.tetromino.pushRight();
+    game.tetromino.draw(ctx, blockSize);
+    console.log(game.tetromino);
 }
