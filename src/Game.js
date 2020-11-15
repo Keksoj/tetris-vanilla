@@ -1,4 +1,4 @@
-import Tetromino from "./tetromino.js";
+import Tetromino from "./Tetromino.js";
 
 /**
  * The all-encompassing object to describe the game state
@@ -20,7 +20,7 @@ export default class Game {
         this.timer = 0;
         window.setInterval(() => this.tick(), this.ticktime);
     }
-    
+
     /** perform a tick down and all the logic */
     tick() {
         // this.checkCollisions();
