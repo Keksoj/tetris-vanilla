@@ -1,4 +1,4 @@
-// import { sayhi } from "./tetromino";
+import { sayhi } from "./tetromino.js";
 
 var blockSize = 30;
 var timer;
