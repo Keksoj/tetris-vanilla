@@ -2,6 +2,7 @@
  * A group a four blocks to move around
  * @typedef {object} Tetromino
  * @property {Number} spin
+ * @property {String} none
  * @property {[{x: number, y: number}]} blocks
  * @property {[String]} name
  * @property {[String]} color
@@ -89,27 +90,60 @@ export default class Tetromino {
         );
 
         this.spin = 0;
+        this.move = "none";
         this.name = this.allNames[randomPicker];
         this.color = this.allColors[randomPicker];
         this.blocks = this.blockCoordinates[randomPicker];
+
+        this.nextMoveSimulation = [
+            { x: 2, y: -2 },
+            { x: 3, y: -1 },
+            { x: 4, y: 1 },
+            { x: 5, y: 2 },
+        ];
+    }
+
+    /** take direction to move the tetromino
+     */
+    computeTheMove() {
+        this.nextMoveSimulation = this.blocks;
+        switch (this.move) {
+            case "left":
+                this.pushLeft();
+                break;
+            case "right":
+                this.pushRight();
+                break;
+            case "down":
+                this.pushDown();
+                break;
+            case "turn":
+                this.turn();
+                break;
+            default:
+                break;
+        }
+    }
+    settleTheMove() {
+        this.blocks = this.nextMoveSimulation;
     }
 
     /** Push to the bottom */
     pushDown() {
         for (var i = 0; i < 4; i++) {
-            this.blocks[i].y += 1;
+            this.nextMoveSimulation[i].y += 1;
         }
     }
     /** Push to the left */
     pushLeft() {
         for (var i = 0; i < 4; i++) {
-            this.blocks[i].x -= 1;
+            this.nextMoveSimulation[i].x -= 1;
         }
     }
     /** Push to the right */
     pushRight() {
         for (var i = 0; i < 4; i++) {
-            this.blocks[i].x += 1;
+            this.nextMoveSimulation[i].x += 1;
         }
     }
     /** turn the tetromino (affects the spin property too) */
