@@ -1,14 +1,15 @@
 import Game from "./Game.js";
 
-/** The width of the canvas' building blocks */
-var blockSize = 30;
+/** The width of the canvas' building cells */
+var cellSize = 30;
 
 const canvas = document.getElementById("canvas");
-canvas.width = 10 * blockSize;
-canvas.height = 17 * blockSize;
+canvas.width = 10 * cellSize;
+canvas.height = 17 * cellSize;
 var ctx = canvas.getContext("2d");
 
-var game = new Game(ctx, blockSize);
+var game = new Game(ctx, cellSize);
+// console.log(game);
 
 document.onkeydown = (event) => {
     switch (event.key) {
