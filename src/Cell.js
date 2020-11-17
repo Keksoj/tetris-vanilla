@@ -31,12 +31,7 @@ export default class Cell {
     draw(ctx, cellSize) {
         ctx.save();
         ctx.fillStyle = this.color;
-        ctx.fillRect(
-            this.x * cellSize,
-            this.y * cellSize,
-            cellSize,
-            cellSize
-        );
+        ctx.fillRect(this.x * cellSize, this.y * cellSize, cellSize, cellSize);
         ctx.restore();
     }
 }

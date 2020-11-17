@@ -81,13 +81,20 @@ export default class Tetromino {
         this.binaryValues = this.tetrominoes[randomPicker].binaryValues;
         this.color = this.tetrominoes[randomPicker].color;
 
-        this.xPosition = 3;
-        this.yPosition = 2;
+        // this puts the tetromino on the side for display
+        this.xPosition = 13;
+        this.yPosition = 1;
 
         this.cells = [];
 
-        // this.nextMoveSimulation = [];
     }
+
+    /** Place the tetromino on the top middle of the board */
+    putInGame() {
+        this.xPosition = 3;
+        this.yPosition = -1;
+    }
+
 
     /** take direction to move the tetromino
      * @param {String} either "up", "down", "left", "right", "turn"
@@ -106,7 +113,7 @@ export default class Tetromino {
         }
         this.toCells();
     }
-    
+
     /** undo the move
      * @param {String} either "up", "down", "left", "right", "turn"
      */
@@ -179,7 +186,7 @@ export default class Tetromino {
      * converts the 0 and 1 grid to an array of drawable Cells
      */
     toCells() {
-        console.log('toCells() called');
+        // console.log('toCells() called');
         this.cells = [];
         var squareWidth = Math.sqrt(this.binaryValues.length);
         for (var i = 0; i < this.binaryValues.length; i++) {
@@ -193,7 +200,7 @@ export default class Tetromino {
         }
     }
 
-    /** draw the tetromino on the canvas
+    /** draw the tetromino on the board
      * @param {CanvasRenderingContext2D} ctx
      * @param {Number} cellSize
      */
@@ -207,4 +214,5 @@ export default class Tetromino {
 
         ctx.restore();
     }
+
 }
