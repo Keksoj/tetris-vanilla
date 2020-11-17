@@ -92,7 +92,7 @@ export default class Tetromino {
     /** Place the tetromino on the top middle of the board */
     putInGame() {
         this.xPosition = 3;
-        this.yPosition = -1;
+        this.yPosition = 0;
     }
 
 
@@ -109,7 +109,7 @@ export default class Tetromino {
             this.moveRight();
         } else if (direction === 'turn') {
             this.turn();
-            console.log(this.binaryValues);
+            // console.log(this.binaryValues);
         }
         this.toCells();
     }
@@ -128,7 +128,7 @@ export default class Tetromino {
             this.turn();
             this.turn();
             this.turn();
-            console.log(this.binaryValues);
+            // console.log(this.binaryValues);
         }
         this.toCells();
     }
