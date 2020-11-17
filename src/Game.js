@@ -18,7 +18,7 @@ export default class Game {
     constructor(ctx, cellSize) {
         this.score = 0;
         this.ctx = ctx;
-        this.ticktime = 5000;
+        this.ticktime = 900;
         this.cellSize = cellSize;
         this.tetromino = new Tetromino();
         // this.nextMoveTetromino = new Tetromino();
@@ -38,13 +38,20 @@ export default class Game {
      * @param {String} direction
      */
     move(direction) {
-        this.tetromino.computeTheMove(direction);
-        // console.log(this.tetromino.nextMoveSimulation);
-        if (!this.collisionOccurs()) {
-            console.log("the game detected no collision");
-            this.tetromino.settleTheMove();
-        } else if (this.collisionOccurs && direction === "down") {
+        this.tetromino.move(direction);
+
+        if (this.collisionOccurs() && direction === "down") {
+            console.log("we must freeze this one");
+            this.tetromino.reverseTheMove(direction);
             this.writeTetrominoOnTheStack();
+            this.tetromino = new Tetromino();
+
+        } else if (this.collisionOccurs()) {
+            console.log("we'll have to reverse that move");
+            this.tetromino.reverseTheMove(direction);
+            this.tetromino.draw(this.ctx, this.cellSize);
+        } else {
+            console.log("let's move this bad boy then");
         }
         this.draw();
     }
@@ -56,29 +63,29 @@ export default class Game {
         for (var i = 0; i < 4; i++) {
             // walls
             if (
-                this.tetromino.moveSimulation.cells[i].x < 0 ||
-                this.tetromino.moveSimulation.cells[i].x > 9
+                this.tetromino.cells[i].x < 0 ||
+                this.tetromino.cells[i].x > 9
             ) {
                 console.log("wall collision");
                 return true;
             }
             // bottom
-            if (this.tetromino.moveSimulation.cells[i].y > 16) {
+            if (this.tetromino.cells[i].y > 16) {
                 console.log("bottom collision");
                 return true;
             }
             // stack
             for (var j = 0; j < this.stack.length; j++) {
                 if (
-                    this.tetromino.moveSimulation.cells[i].x ==
-                        this.stack[j].x &&
-                    this.tetromino.moveSimulation.cells[i].y == this.stack[j].y
+                    this.tetromino.cells[i].x == this.stack[j].x &&
+                    this.tetromino.cells[i].y == this.stack[j].y
                 ) {
                     console.log("collision with the stack");
                     return true;
                 }
             }
         }
+        console.log("no collision");
         return false;
     }
 
@@ -88,7 +95,7 @@ export default class Game {
         for (var i = 0; i < 4; i++) {
             this.stack.push(this.tetromino.cells[i]);
         }
-        this.tetromino = new Tetromino();
+        // this.tetromino = new Tetromino();
     }
 
     /** draw the game

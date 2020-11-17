@@ -3,259 +3,180 @@ import Cell from "./Cell.js";
 /**
  * A group a four cells to move around
  * @typedef {object} Tetromino
- * @property {Number} spin
- * @property {String} none
+ * @property {String} name
+ * @property {[Number]} binaryValues
+ * @property {String} color
+ * @property {Number} xPosition
+ * @property {Number} yPosition
  * @property {[Cell]} cells
- *
- * @property {[String]} name
- * @property {[String]} color
- *
  */
 export default class Tetromino {
     /** all necessary data to build a tetromino
-     * @type {[{name: String, cells: [{x: number, y: number}], color: String}]}
+     * @type {[{name: String, binaryValues: [Number], color: String}]}
      */
     tetrominoes = [
         {
             name: "T",
-            cells: [
-                { x: 3, y: -1 },
-                { x: 4, y: -1 },
-                { x: 5, y: -1 },
-                { x: 4, y: -2 },
-            ],
+            // 0 1 0
+            // 1 1 1
+            // 0 0 0
+            binaryValues: [0, 1, 0, 1, 1, 1, 0, 0, 0],
             color: "orange",
         },
         {
             name: "I",
-            cells: [
-                { x: 4, y: -4 },
-                { x: 4, y: -3 },
-                { x: 4, y: -2 },
-                { x: 4, y: -1 },
-            ],
+            // 0 0 1 0
+            // 0 0 1 0
+            // 0 0 1 0
+            // 0 0 1 0
+            binaryValues: [0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0],
             color: "red",
         },
         {
             name: "S",
-            cells: [
-                { x: 5, y: -2 },
-                { x: 4, y: -2 },
-                { x: 4, y: -1 },
-                { x: 3, y: -1 },
-            ],
+            // 0 1 1
+            // 1 1 0
+            // 0 0 0
+            binaryValues: [0, 1, 1, 1, 1, 0, 0, 0, 0],
             color: "green",
         },
         {
             name: "Z",
-            cells: [
-                { x: 3, y: -2 },
-                { x: 4, y: -2 },
-                { x: 4, y: -1 },
-                { x: 5, y: -1 },
-            ],
+            // 0 0 0
+            // 1 1 0
+            // 0 1 1
+            binaryValues: [0, 0, 0, 1, 1, 0, 0, 1, 1],
             color: "lightblue",
         },
         {
             name: "O",
-            cells: [
-                { x: 4, y: -2 },
-                { x: 5, y: -2 },
-                { x: 4, y: -1 },
-                { x: 5, y: -1 },
-            ],
+            // 0 0 0 0
+            // 0 1 1 0
+            // 0 1 1 0
+            // 0 0 0 0
+            binaryValues: [0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0],
             color: "blue",
         },
         {
             name: "L",
-            cells: [
-                { x: 4, y: -3 },
-                { x: 4, y: -2 },
-                { x: 4, y: -1 },
-                { x: 5, y: -1 },
-            ],
+            // 0 1 0
+            // 0 1 0
+            // 0 1 1
+            binaryValues: [0, 1, 0, 0, 1, 0, 0, 1, 1],
             color: "purple",
         },
         {
             name: "J",
-            cells: [
-                { x: 5, y: -3 },
-                { x: 5, y: -2 },
-                { x: 5, y: -1 },
-                { x: 6, y: -1 },
-            ],
+            // 0 1 0
+            // 0 1 0
+            // 1 1 0
+            binaryValues: [0, 1, 0, 0, 1, 0, 1, 1, 0],
             color: "white",
         },
     ];
 
     constructor() {
-        // var randomPicker = Math.round(Math.random() * 6);
-        var randomPicker = 1;
+        var randomPicker = Math.round(Math.random() * 6);
+        // var randomPicker = 1;
 
         this.name = this.tetrominoes[randomPicker].name;
+        this.binaryValues = this.tetrominoes[randomPicker].binaryValues;
+        this.color = this.tetrominoes[randomPicker].color;
+
+        this.xPosition = 3;
+        this.yPosition = 2;
 
         this.cells = [];
-        for (var i = 0; i < 4; i++) {
-            this.cells.push(
-                new Cell(
-                    this.tetrominoes[randomPicker].cells[i].x,
-                    this.tetrominoes[randomPicker].cells[i].y,
-                    this.tetrominoes[randomPicker].color
-                )
-            );
-        }
 
-        this.moveSimulation = {
-            cells: [],
-            spin: 0,
-        };
-
-        this.spin = 0;
-        this.move = "none";
         // this.nextMoveSimulation = [];
     }
 
     /** take direction to move the tetromino
      *
      */
-    computeTheMove(direction) {
-        // this.simulationCoordinates = [];
-        this.moveSimulation.cells = [];
-        // copy the cells into the simulation
-        for (var i = 0; i < 4; i++) {
-            this.moveSimulation.cells.push(this.cells[i]);
-            this.moveSimulation.spin = 0 + this.spin;
-        }
-        console.log(this.moveSimulation);
-
+    move(direction) {
         // believe it or not this works better than a switch statement
         if (direction === "down") {
-            for (var i = 0; i < 4; i++) {
-                this.moveSimulation.cells[i].y += 1;
-            }
+            this.moveDown();
+        } else if (direction === "left") {
+            this.moveLeft();
+        } else if (direction === "right") {
+            this.moveRight();
+        } else if (direction === "turn") {
+            this.turn();
+            console.log(this.binaryValues);
         }
-        if (direction === "left") {
-            for (var i = 0; i < 4; i++) {
-                this.moveSimulation.cells[i].x -= 1;
-            }
+        this.toCells();
+    }
+    /** undo the move */
+    reverseTheMove(direction) {
+        if (direction === "down") {
+            this.moveUp();
+        } else if (direction === "left") {
+            this.moveRight();
+        } else if (direction === "right") {
+            this.moveLeft();
+        } else if (direction === "turn") {
+            this.turn();
+            this.turn();
+            this.turn();
+            console.log(this.binaryValues);
         }
-        if (direction === "right") {
-            for (var i = 0; i < 4; i++) {
-                this.moveSimulation.cells[i].x += 1;
-            }
-        }
-        if (direction === "turn") this.turn();
+        this.toCells();
     }
 
-    settleTheMove() {
-        for (var i = 0; i < 4; i++) {
-            this.cells[i].x = this.moveSimulation.cells[i].x;
-            this.cells[i].y = this.moveSimulation.cells[i].y;
-            this.spin = this.moveSimulation.spin;
-        }
+    moveUp() {
+        this.yPosition -= 1;
+    }
+    moveDown() {
+        this.yPosition += 1;
+    }
+    moveLeft() {
+        this.xPosition -= 1;
+    }
+    moveRight() {
+        this.xPosition += 1;
     }
 
-    /** turn the tetromino (affects the spin property too) */
+    /** turn the tetromino */
     turn() {
-        console.log("you spin me right round", this.spin, "times");
-        switch (this.moveSimulation.spin) {
-            case 0:
-                switch (this.name) {
-                    case "T":
-                        this.moveSimulation.cells[0].x += 1;
-                        this.moveSimulation.cells[0].y -= 1;
-                        this.moveSimulation.spin += 1;
-                        break;
-                    case "I":
-                        this.moveSimulation.cells[0].x -= 2;
-                        this.moveSimulation.cells[0].y += 2;
-                        this.moveSimulation.cells[1].x -= 1;
-                        this.moveSimulation.cells[1].y += 1;
-                        this.moveSimulation.cells[3].x += 1;
-                        this.moveSimulation.cells[3].y -= 1;
-                        this.moveSimulation.spin += 1;
-                        break;
-                    case "S":
-                        break;
-                    case "Z":
-                        break;
-                    case "L":
-                        break;
-                    case "J":
-                        break;
-                }
-                break;
-            case 1:
-                switch (this.name) {
-                    case "T":
-                        this.moveSimulation.cells[3].x -= 1;
-                        this.moveSimulation.cells[3].y += 1;
-                        this.moveSimulation.spin += 1;
-                        break;
-                    case "I":
-                        this.moveSimulation.cells[0].x += 2;
-                        this.moveSimulation.cells[0].y -= 2;
-                        this.moveSimulation.cells[1].x += 1;
-                        this.moveSimulation.cells[1].y -= 1;
-                        this.moveSimulation.cells[3].x -= 1;
-                        this.moveSimulation.cells[3].y += 1;
-                        this.moveSimulation.spin -= 1;
-                        break;
-                    case "S":
-                        break;
-                    case "Z":
-                        break;
-                    case "L":
-                        break;
-                    case "J":
-                        break;
-                }
+        const swap = (array, i, j, k, l) => {
+            let firstCellValue = array[i];
+            array[i] = array[j];
+            array[j] = array[k];
+            array[k] = array[l];
+            array[l] = firstCellValue;
+        };
+        // 4 x 4 table
+        if (this.binaryValues.length === 16) {
+            swap(this.binaryValues, 0, 12, 15, 3);
+            swap(this.binaryValues, 1, 8, 14, 7);
+            swap(this.binaryValues, 2, 4, 13, 11);
+            swap(this.binaryValues, 5, 9, 10, 6);
+        }
+        // 3 x 3
+        else {
+            swap(this.binaryValues, 0, 6, 8, 2);
+            swap(this.binaryValues, 1, 3, 7, 5);
+        }
+    }
 
-                break;
-            case 2:
-                switch (this.name) {
-                    case "T":
-                        this.moveSimulation.cells[2].x -= 1;
-                        this.moveSimulation.cells[2].y -= 1;
-                        break;
-                    case "I":
-                        break;
-                    case "S":
-                        break;
-                    case "Z":
-                        break;
-                    case "L":
-                        break;
-                    case "J":
-                        break;
-                }
-                this.moveSimulation.spin += 1;
-
-                break;
-            case 3:
-                switch (this.name) {
-                    case "T":
-                        this.moveSimulation.cells[0].x -= 1;
-                        this.moveSimulation.cells[0].y += 1;
-                        this.moveSimulation.cells[3].x += 1;
-                        this.moveSimulation.cells[3].y -= 1;
-                        this.moveSimulation.cells[2].x += 1;
-                        this.moveSimulation.cells[2].y += 1;
-                        break;
-                    case "I":
-                        break;
-                    case "S":
-                        break;
-                    case "Z":
-                        break;
-                    case "L":
-                        break;
-                    case "J":
-                        break;
-                }
-                this.moveSimulation.spin -= 3;
-
-                break;
+    toCells() {
+        console.log("toCells() called");
+        this.cells = [];
+        var squareWidth = Math.sqrt(this.binaryValues.length);
+        for (var i = 0; i < this.binaryValues.length; i++) {
+            if (this.binaryValues[i] === 1) {
+                var xAddition = i % squareWidth;
+                var yAddition = Math.floor(i / squareWidth);
+                this.cells.push(
+                    new Cell(
+                        this.xPosition + yAddition,
+                        this.yPosition + xAddition,
+                        this.color
+                    )
+                );
+            }
         }
     }
 
@@ -266,6 +187,7 @@ export default class Tetromino {
     draw(ctx, cellSize) {
         ctx.save();
         ctx.fillStyle = this.color;
+        this.toCells();
         for (var i = 0; i < 4; i++) {
             this.cells[i].draw(ctx, cellSize);
         }
