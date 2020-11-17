@@ -14,16 +14,16 @@ var game = new Game(ctx, cellSize);
 document.onkeydown = (event) => {
     switch (event.key) {
         case "ArrowLeft":
-            game.takeDirection("left");
+            game.move("left");
             break;
         case "ArrowUp":
-            game.takeDirection("turn");
+            game.move("turn");
             break;
         case "ArrowRight":
-            game.takeDirection("right");
+            game.move("right");
             break;
         case "ArrowDown":
-            game.takeDirection("down");
+            game.move("down");
             break;
         case " ":
             game.pause();

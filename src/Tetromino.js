@@ -89,21 +89,26 @@ export default class Tetromino {
     ];
 
     constructor() {
-        var randomPicker = Math.round(Math.random() * 6);
+        // var randomPicker = Math.round(Math.random() * 6);
+        var randomPicker = 1;
 
         this.name = this.tetrominoes[randomPicker].name;
 
         this.cells = [];
         for (var i = 0; i < 4; i++) {
-            var cell = new Cell(
-                this.tetrominoes[randomPicker].cells[i].x,
-                this.tetrominoes[randomPicker].cells[i].y,
-                this.tetrominoes[randomPicker].color
+            this.cells.push(
+                new Cell(
+                    this.tetrominoes[randomPicker].cells[i].x,
+                    this.tetrominoes[randomPicker].cells[i].y,
+                    this.tetrominoes[randomPicker].color
+                )
             );
-            this.cells.push(cell);
         }
 
-        this.simulationCoordinates = [];
+        this.moveSimulation = {
+            cells: [],
+            spin: 0,
+        };
 
         this.spin = 0;
         this.move = "none";
@@ -114,54 +119,104 @@ export default class Tetromino {
      *
      */
     computeTheMove(direction) {
-        this.simulationCoordinates = [];
-        console.log(
-            "simulation coordinates before creation:",
-            this.simulationCoordinates
-        );
+        // this.simulationCoordinates = [];
+        this.moveSimulation.cells = [];
+        // copy the cells into the simulation
         for (var i = 0; i < 4; i++) {
-            var cellCoordinates = this.cells[i].getCoordinates();
-            this.simulationCoordinates.push(cellCoordinates);
+            this.moveSimulation.cells.push(this.cells[i]);
+            this.moveSimulation.spin = 0 + this.spin;
         }
+        console.log(this.moveSimulation);
 
+        // believe it or not this works better than a switch statement
         if (direction === "down") {
             for (var i = 0; i < 4; i++) {
-                this.simulationCoordinates[i].y += 1;
+                this.moveSimulation.cells[i].y += 1;
             }
         }
-
         if (direction === "left") {
             for (var i = 0; i < 4; i++) {
-                this.simulationCoordinates[i].x -= 1;
+                this.moveSimulation.cells[i].x -= 1;
             }
         }
-
         if (direction === "right") {
             for (var i = 0; i < 4; i++) {
-                this.simulationCoordinates[i].x += 1;
+                this.moveSimulation.cells[i].x += 1;
             }
         }
-
-        // console.log("the original coordinates were:", this.cells);
-        // console.log("the new ones are:", this.simulationCoordinates);
-
+        if (direction === "turn") this.turn();
     }
 
     settleTheMove() {
         for (var i = 0; i < 4; i++) {
-            this.cells[i].x = this.simulationCoordinates[i].x;
-            this.cells[i].y = this.simulationCoordinates[i].y;
+            this.cells[i].x = this.moveSimulation.cells[i].x;
+            this.cells[i].y = this.moveSimulation.cells[i].y;
+            this.spin = this.moveSimulation.spin;
         }
     }
 
     /** turn the tetromino (affects the spin property too) */
     turn() {
-        switch (this.spin) {
+        console.log("you spin me right round", this.spin, "times");
+        switch (this.moveSimulation.spin) {
             case 0:
                 switch (this.name) {
                     case "T":
-                        this.cells[0].x += 1;
-                        this.cells[1].y -= 1;
+                        this.moveSimulation.cells[0].x += 1;
+                        this.moveSimulation.cells[0].y -= 1;
+                        this.moveSimulation.spin += 1;
+                        break;
+                    case "I":
+                        this.moveSimulation.cells[0].x -= 2;
+                        this.moveSimulation.cells[0].y += 2;
+                        this.moveSimulation.cells[1].x -= 1;
+                        this.moveSimulation.cells[1].y += 1;
+                        this.moveSimulation.cells[3].x += 1;
+                        this.moveSimulation.cells[3].y -= 1;
+                        this.moveSimulation.spin += 1;
+                        break;
+                    case "S":
+                        break;
+                    case "Z":
+                        break;
+                    case "L":
+                        break;
+                    case "J":
+                        break;
+                }
+                break;
+            case 1:
+                switch (this.name) {
+                    case "T":
+                        this.moveSimulation.cells[3].x -= 1;
+                        this.moveSimulation.cells[3].y += 1;
+                        this.moveSimulation.spin += 1;
+                        break;
+                    case "I":
+                        this.moveSimulation.cells[0].x += 2;
+                        this.moveSimulation.cells[0].y -= 2;
+                        this.moveSimulation.cells[1].x += 1;
+                        this.moveSimulation.cells[1].y -= 1;
+                        this.moveSimulation.cells[3].x -= 1;
+                        this.moveSimulation.cells[3].y += 1;
+                        this.moveSimulation.spin -= 1;
+                        break;
+                    case "S":
+                        break;
+                    case "Z":
+                        break;
+                    case "L":
+                        break;
+                    case "J":
+                        break;
+                }
+
+                break;
+            case 2:
+                switch (this.name) {
+                    case "T":
+                        this.moveSimulation.cells[2].x -= 1;
+                        this.moveSimulation.cells[2].y -= 1;
                         break;
                     case "I":
                         break;
@@ -174,9 +229,32 @@ export default class Tetromino {
                     case "J":
                         break;
                 }
-                self.spin += 1;
+                this.moveSimulation.spin += 1;
+
                 break;
-            case 1:
+            case 3:
+                switch (this.name) {
+                    case "T":
+                        this.moveSimulation.cells[0].x -= 1;
+                        this.moveSimulation.cells[0].y += 1;
+                        this.moveSimulation.cells[3].x += 1;
+                        this.moveSimulation.cells[3].y -= 1;
+                        this.moveSimulation.cells[2].x += 1;
+                        this.moveSimulation.cells[2].y += 1;
+                        break;
+                    case "I":
+                        break;
+                    case "S":
+                        break;
+                    case "Z":
+                        break;
+                    case "L":
+                        break;
+                    case "J":
+                        break;
+                }
+                this.moveSimulation.spin -= 3;
+
                 break;
         }
     }

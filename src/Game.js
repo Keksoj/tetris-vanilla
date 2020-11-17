@@ -18,42 +18,34 @@ export default class Game {
     constructor(ctx, cellSize) {
         this.score = 0;
         this.ctx = ctx;
-        this.ticktime = 10000;
+        this.ticktime = 5000;
         this.cellSize = cellSize;
         this.tetromino = new Tetromino();
         // this.nextMoveTetromino = new Tetromino();
-        this.stack = [new Cell(5, 5, "green")];
+        this.stack = [];
         this.timer = 0;
         window.setInterval(() => this.tick(), this.ticktime);
     }
 
     /** perform a tick down and all the logic */
     tick() {
-        // this.takeDirection();
-        // this.checkCollisions();
         // this.clearFullRows();
-        // this.takeDirection("down");
-        // this.draw();
+        this.move("down");
     }
 
     /**
      * move the tetromino about
      * @param {String} direction
      */
-    takeDirection(direction) {
-        // this.tetromino.move = direction;
-        // console.log(direction);
-
-
+    move(direction) {
         this.tetromino.computeTheMove(direction);
         // console.log(this.tetromino.nextMoveSimulation);
         if (!this.collisionOccurs()) {
             console.log("the game detected no collision");
             this.tetromino.settleTheMove();
+        } else if (this.collisionOccurs && direction === "down") {
+            this.writeTetrominoOnTheStack();
         }
-        // if (this.collisionOccurs && this.tetromino.move === "down") {
-        //     this.writeTetrominoOnTheStack();
-        // }
         this.draw();
     }
 
@@ -64,22 +56,23 @@ export default class Game {
         for (var i = 0; i < 4; i++) {
             // walls
             if (
-                this.tetromino.simulationCoordinates[i].x < 0 ||
-                this.tetromino.simulationCoordinates[i].x > 9
+                this.tetromino.moveSimulation.cells[i].x < 0 ||
+                this.tetromino.moveSimulation.cells[i].x > 9
             ) {
                 console.log("wall collision");
                 return true;
             }
             // bottom
-            if (this.tetromino.simulationCoordinates[i].y > 17) {
+            if (this.tetromino.moveSimulation.cells[i].y > 16) {
                 console.log("bottom collision");
                 return true;
             }
             // stack
             for (var j = 0; j < this.stack.length; j++) {
                 if (
-                    this.tetromino.simulationCoordinates[i].x == this.stack[j].x &&
-                    this.tetromino.simulationCoordinates[i].y == this.stack[j].y
+                    this.tetromino.moveSimulation.cells[i].x ==
+                        this.stack[j].x &&
+                    this.tetromino.moveSimulation.cells[i].y == this.stack[j].y
                 ) {
                     console.log("collision with the stack");
                     return true;
@@ -91,6 +84,7 @@ export default class Game {
 
     /** Writes the tetromino coordinates and color on the stack */
     writeTetrominoOnTheStack() {
+        console.log("that one won't go anywhere");
         for (var i = 0; i < 4; i++) {
             this.stack.push(this.tetromino.cells[i]);
         }

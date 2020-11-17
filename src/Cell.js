@@ -20,7 +20,7 @@ export default class Cell {
         coordinates.x = this.x;
         coordinates.y = this.y;
 
-        console.log("the cell coordinates:", coordinates);
+        // console.log("the cell coordinates:", coordinates);
         return coordinates;
     }
 
