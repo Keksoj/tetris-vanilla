@@ -1,4 +1,4 @@
-import Cell from "./Cell.js";
+import Cell from './Cell.js';
 
 /**
  * A group a four cells to move around
@@ -16,62 +16,60 @@ export default class Tetromino {
      */
     tetrominoes = [
         {
-            name: "T",
+            name: 'T',
             // 0 1 0
             // 1 1 1
             // 0 0 0
             binaryValues: [0, 1, 0, 1, 1, 1, 0, 0, 0],
-            color: "orange",
+            color: 'orange',
         },
         {
-            name: "I",
+            name: 'I',
             // 0 0 1 0
             // 0 0 1 0
             // 0 0 1 0
             // 0 0 1 0
             binaryValues: [0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0],
-            color: "red",
+            color: 'red',
         },
         {
-            name: "S",
+            name: 'S',
             // 0 1 1
             // 1 1 0
             // 0 0 0
             binaryValues: [0, 1, 1, 1, 1, 0, 0, 0, 0],
-            color: "green",
+            color: 'green',
         },
         {
-            name: "Z",
+            name: 'Z',
             // 0 0 0
             // 1 1 0
             // 0 1 1
             binaryValues: [0, 0, 0, 1, 1, 0, 0, 1, 1],
-            color: "lightblue",
+            color: 'lightblue',
         },
         {
-            name: "O",
-            // 0 0 0 0
-            // 0 1 1 0
-            // 0 1 1 0
-            // 0 0 0 0
-            binaryValues: [0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0],
-            color: "blue",
+            name: 'O',
+            // 1 1
+            // 1 1
+            binaryValues: [1, 1, 1, 1],
+            color: 'blue',
         },
         {
-            name: "L",
+            name: 'L',
             // 0 1 0
             // 0 1 0
             // 0 1 1
             binaryValues: [0, 1, 0, 0, 1, 0, 0, 1, 1],
-            color: "purple",
+            color: 'purple',
         },
         {
-            name: "J",
+            name: 'J',
             // 0 1 0
             // 0 1 0
             // 1 1 0
             binaryValues: [0, 1, 0, 0, 1, 0, 1, 1, 0],
-            color: "white",
+            color: 'white',
         },
     ];
 
@@ -92,31 +90,34 @@ export default class Tetromino {
     }
 
     /** take direction to move the tetromino
-     *
+     * @param {String} either "up", "down", "left", "right", "turn"
      */
     move(direction) {
         // believe it or not this works better than a switch statement
-        if (direction === "down") {
+        if (direction === 'down') {
             this.moveDown();
-        } else if (direction === "left") {
+        } else if (direction === 'left') {
             this.moveLeft();
-        } else if (direction === "right") {
+        } else if (direction === 'right') {
             this.moveRight();
-        } else if (direction === "turn") {
+        } else if (direction === 'turn') {
             this.turn();
             console.log(this.binaryValues);
         }
         this.toCells();
     }
-    /** undo the move */
+    
+    /** undo the move
+     * @param {String} either "up", "down", "left", "right", "turn"
+     */
     reverseTheMove(direction) {
-        if (direction === "down") {
+        if (direction === 'down') {
             this.moveUp();
-        } else if (direction === "left") {
+        } else if (direction === 'left') {
             this.moveRight();
-        } else if (direction === "right") {
+        } else if (direction === 'right') {
             this.moveLeft();
-        } else if (direction === "turn") {
+        } else if (direction === 'turn') {
             this.turn();
             this.turn();
             this.turn();
@@ -147,34 +148,46 @@ export default class Tetromino {
             array[k] = array[l];
             array[l] = firstCellValue;
         };
-        // 4 x 4 table
-        if (this.binaryValues.length === 16) {
-            swap(this.binaryValues, 0, 12, 15, 3);
-            swap(this.binaryValues, 1, 8, 14, 7);
-            swap(this.binaryValues, 2, 4, 13, 11);
-            swap(this.binaryValues, 5, 9, 10, 6);
-        }
         // 3 x 3
-        else {
+        if (this.binaryValues.length === 9) {
             swap(this.binaryValues, 0, 6, 8, 2);
             swap(this.binaryValues, 1, 3, 7, 5);
+            console.log('flat I');
+        } else if (this.name === 'I') {
+            // Turning the I-shape tetromino within the 4 x 4 grid feels unnatural.
+            // We have to hardcode the legacy behaviour that switches between
+            // 0 0 1 0
+            // 0 0 1 0
+            // 0 0 1 0
+            // 0 0 1 0
+            // and
+            // 0 0 0 0
+            // 0 0 0 0
+            // 1 1 1 1
+            // 0 0 0 0
+            if (this.binaryValues[2] === 1) {
+                this.binaryValues = [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0];
+            } else {
+                this.binaryValues = [0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0];
+            }
+        } else if (this.name === '0') {
+            return;
         }
     }
 
+    /**
+     * converts the 0 and 1 grid to an array of drawable Cells
+     */
     toCells() {
-        console.log("toCells() called");
+        console.log('toCells() called');
         this.cells = [];
         var squareWidth = Math.sqrt(this.binaryValues.length);
         for (var i = 0; i < this.binaryValues.length; i++) {
             if (this.binaryValues[i] === 1) {
-                var xAddition = i % squareWidth;
-                var yAddition = Math.floor(i / squareWidth);
+                var xAddition = Math.floor(i / squareWidth);
+                var yAddition = i % squareWidth;
                 this.cells.push(
-                    new Cell(
-                        this.xPosition + yAddition,
-                        this.yPosition + xAddition,
-                        this.color
-                    )
+                    new Cell(this.xPosition + yAddition, this.yPosition + xAddition, this.color)
                 );
             }
         }
