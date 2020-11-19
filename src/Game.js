@@ -29,15 +29,30 @@ export default class Game {
         this.tetromino = firstTetromino;
 
         this.nextTetromino = new Tetromino();
-        
-        this.timer = 0;
+
         this.ticker = window.setInterval(() => this.tick(), this.ticktime);
     }
 
     /** perform a tick down and all the logic */
     tick() {
         // this.clearFullRows();
-        this.move('down');
+        this.tetromino.move('down');
+        if (this.collisionOccurs()) {
+            this.tetromino.reverseTheMove('down');
+            this.stack.writeCells(this.tetromino.cells);
+            this.score += this.stack.clearFullRows();
+            console.log(this.score);
+            if (this.stack.overflows()) {
+                console.log('we try to stop the game');
+                this.gameOver;
+            }
+
+            this.tetromino = this.nextTetromino;
+            this.tetromino.putInGame();
+            this.nextTetromino = new Tetromino();
+        }
+        this.tetromino.draw(this.ctx, this.cellSize);
+        this.draw(this.ctx, this.cellSize);
     }
 
     /**
@@ -47,20 +62,7 @@ export default class Game {
     move(direction) {
         this.tetromino.move(direction);
 
-        if (this.collisionOccurs() && direction === 'down') {
-            this.tetromino.reverseTheMove(direction);
-            this.stack.writeCells(this.tetromino.cells);
-            this.score += this.stack.clearFullRows();
-            if (this.stack.hasOverflow()) {
-                this.gameOver;
-            }
-
-            this.tetromino = this.nextTetromino;
-            this.tetromino.putInGame();
-            this.nextTetromino = new Tetromino();
-
-            this.draw(this.ctx, this.cellSize);
-        } else if (this.collisionOccurs()) {
+        if (this.collisionOccurs()) {
             this.tetromino.reverseTheMove(direction);
         }
         this.draw();

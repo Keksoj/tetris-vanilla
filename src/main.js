@@ -9,6 +9,7 @@ canvas.height = 20 * cellSize;
 var ctx = canvas.getContext('2d');
 
 var game = new Game(ctx, cellSize);
+// game.tick();
 
 document.onkeydown = (event) => {
     switch (event.key) {

@@ -38,6 +38,7 @@ export default class Stack {
         for (var i = 0; i < fullRows.length; i++) {
             console.log('cleaning row ', fullRows[i]);
             this.rows.splice(fullRows[i]);
+            console.log('adding an empty row');
             this.rows.unshift([
                 'empty',
                 'empty',
@@ -51,7 +52,7 @@ export default class Stack {
                 'empty',
             ]);
         }
-        console.log('after cleaning full rows', this.rows);
+        console.log('after cleaning full rows there are ', this.rows.length, 'of them');
         return fullRows.length;
     }
 
@@ -68,14 +69,17 @@ export default class Stack {
     /** check if the stack is too high, for game over
      * @returns {Boolean} game is over
      */
-    hasOverflow() {
+    overflows() {
+        console.log('checking if the stack overflows…');
         for (var y = 0; y < 3; y++) {
             for (var x = 0; x < 10; x++) {
                 if (this.rows[y][x] !== 'empty') {
+                    console.log('…yep');
                     return true;
                 }
             }
         }
+        console.log('…nope');
         return false;
     }
 
