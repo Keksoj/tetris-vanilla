@@ -4,7 +4,7 @@ import Game from './Game.js';
 var cellSize = 30;
 
 const canvas = document.getElementById('canvas');
-canvas.width = 10 * cellSize + 300;
+canvas.width = 16 * cellSize;
 canvas.height = 20 * cellSize;
 var ctx = canvas.getContext('2d');
 
@@ -28,6 +28,11 @@ document.onkeydown = (event) => {
         case ' ':
             game.pause();
             return;
+        case 'Enter':
+            if (game.isOver) {
+                game.restart();
+            }
+            break;
         default:
             return;
     }

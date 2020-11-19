@@ -37,11 +37,18 @@ export default class Stack {
         for (var i = 0; i < rowsToClear.length; i++) {
             var y = rowsToClear[i];
             while (y > 1) {
-                this.rows[y] = this.rows[y - 1];
+                // if we don't perform this extra loop and do simply
+                // this.rows[y] = this.rows[y - 1]
+                // then the top rows will end up having the same… property? Writing a color on
+                // one will mean writing it on all the above rows. Good luck debugging that.
+                // If, like me, you like consistency, go learn Rust.
+                for (var x = 0; x < 10; x++) {
+                    this.rows[y][x] = this.rows[y - 1][x];
+                }
                 y--;
             }
         }
-
+        
         console.log('after cleaning full rows there are ', this.rows.length, 'of them');
         return rowsToClear.length;
     }
@@ -91,13 +98,3 @@ export default class Stack {
         }
     }
 }
-
-/** I can't believe this doesn't work within the code
- * @param {[[String]]} array a nested array
- * @param {Number} index the index of the element to remove
- * @param {[String]} replacement an array to unshift at the start
- */
-const clearAndUnshift = (array, index, replacement) => {
-    array.splice(index);
-    array.unshift(replacement);
-};

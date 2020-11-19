@@ -50,9 +50,11 @@ export default class Tetromino {
         },
         {
             name: 'O',
-            // 1 1
-            // 1 1
-            binaryValues: [1, 1, 1, 1],
+            // 0 0 0 0
+            // 0 1 1 0
+            // 0 1 1 0
+            // 0 0 0 0
+            binaryValues: [0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0],
             color: 'blue',
         },
         {
@@ -82,8 +84,8 @@ export default class Tetromino {
         this.color = this.tetrominoes[randomPicker].color;
 
         // this puts the tetromino on the side for display
-        this.xPosition = 13;
-        this.yPosition = 1;
+        this.xPosition = 11;
+        this.yPosition = 2;
 
         this.cells = [];
     }
