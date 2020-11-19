@@ -27,33 +27,23 @@ export default class Stack {
      * @returns {Number} the number of cleared rows
      */
     clearFullRows() {
-        let fullRows = [];
+        let rowsToClear = [];
         for (var y = 0; y < 20; y++) {
             if (!this.rows[y].includes('empty')) {
-                fullRows.push(y);
+                rowsToClear.push(y);
             }
         }
-        console.log('full rows:', fullRows);
 
-        for (var i = 0; i < fullRows.length; i++) {
-            console.log('cleaning row ', fullRows[i]);
-            this.rows.splice(fullRows[i]);
-            console.log('adding an empty row');
-            this.rows.unshift([
-                'empty',
-                'empty',
-                'empty',
-                'empty',
-                'empty',
-                'empty',
-                'empty',
-                'empty',
-                'empty',
-                'empty',
-            ]);
+        for (var i = 0; i < rowsToClear.length; i++) {
+            var y = rowsToClear[i];
+            while (y > 1) {
+                this.rows[y] = this.rows[y - 1];
+                y--;
+            }
         }
+
         console.log('after cleaning full rows there are ', this.rows.length, 'of them');
-        return fullRows.length;
+        return rowsToClear.length;
     }
 
     /** Write the tetromino colors onto the stack
@@ -90,12 +80,24 @@ export default class Stack {
     draw(ctx, cellSize) {
         for (var y = 0; y < 20; y++) {
             for (var x = 0; x < 10; x++) {
-                ctx.save();
-                ctx.fillStyle = this.rows[y][x];
-                // console.log(this.rows[y][x]);
-                ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
-                ctx.restore();
+                if (this.rows[y][x] !== 'empty') {
+                    ctx.save();
+                    ctx.fillStyle = this.rows[y][x];
+                    // console.log(this.rows[y][x]);
+                    ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+                    ctx.restore();
+                }
             }
         }
     }
 }
+
+/** I can't believe this doesn't work within the code
+ * @param {[[String]]} array a nested array
+ * @param {Number} index the index of the element to remove
+ * @param {[String]} replacement an array to unshift at the start
+ */
+const clearAndUnshift = (array, index, replacement) => {
+    array.splice(index);
+    array.unshift(replacement);
+};
