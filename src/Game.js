@@ -1,4 +1,5 @@
 import Tetromino from './Tetromino.js';
+import Stack from './Stack.js';
 import Cell from './Cell.js';
 
 /**
@@ -21,19 +22,14 @@ export default class Game {
         this.ticktime = 900;
         this.cellSize = cellSize;
 
-        this.stack = [];
-        for (var i = 0; i < 17; i++) {
-            var row = [];
-            for (var j = 0; j < 10; j++) {
-                row.push('empty');
-            }
-            this.stack.push(row);
-        }
+        this.stack = new Stack();
 
         var firstTetromino = new Tetromino();
         firstTetromino.putInGame();
         this.tetromino = firstTetromino;
+
         this.nextTetromino = new Tetromino();
+        
         this.timer = 0;
         this.ticker = window.setInterval(() => this.tick(), this.ticktime);
     }
@@ -53,9 +49,11 @@ export default class Game {
 
         if (this.collisionOccurs() && direction === 'down') {
             this.tetromino.reverseTheMove(direction);
-            this.writeTetrominoOnTheStack();
-            this.clearFullRows();
-            this.checkForGameOver();
+            this.stack.writeCells(this.tetromino.cells);
+            this.score += this.stack.clearFullRows();
+            if (this.stack.hasOverflow()) {
+                this.gameOver;
+            }
 
             this.tetromino = this.nextTetromino;
             this.tetromino.putInGame();
@@ -81,13 +79,13 @@ export default class Game {
                 return true;
             }
             // bottom
-            if (yPos > 16) {
+            if (yPos > 19) {
                 console.log('bottom collision');
                 return true;
             }
             // stack
             if (yPos > 0) {
-                if (this.stack[yPos][xPos] !== 'empty') {
+                if (this.stack.rows[yPos][xPos] !== 'empty') {
                     console.log('collision with the stack');
                     return true;
                 }
@@ -97,48 +95,9 @@ export default class Game {
         return false;
     }
 
-    checkForGameOver() {
-        for (var i = 0; i < 10; i++) {
-            if (this.stack[0][i] !== 'empty') this.gameOver();
-        }
-    }
-
     gameOver() {
         console.log('game over!');
         clearInterval(this.ticker);
-    }
-
-    /** Pushes the tetromino on the stack */
-    writeTetrominoOnTheStack() {
-        console.log("that one won't go anywhere:", this.tetromino.name);
-        for (var i = 0; i < 4; i++) {
-            var cell = this.tetromino.cells[i];
-
-            if (cell.y > 0) this.gameOver;
-
-            this.stack[cell.y][cell.x] = cell.color;
-        }
-        // console.log(this.stack);
-        // this.clearFullRows();
-    }
-
-    clearFullRows() {
-        let fullRows = [];
-        for (var y = 0; y < 17; y++) {
-            if (!this.stack[y].includes('empty')) {
-                fullRows.push(y);
-            }
-        }
-        console.log('full rows:', fullRows);
-
-        for (var i = 0; i < fullRows.length; i++) {
-            this.stack.splice(fullRows[i]);
-            var emptyRow = [];
-            for (var j = 0; j < 10; j++) {
-                emptyRow.push('empty');
-            }
-            this.stack.unshift(emptyRow);
-        }
     }
 
     /** draw the game
@@ -158,20 +117,7 @@ export default class Game {
         this.ctx.fillRect(0, 0, canvas.width - 300, canvas.height);
 
         // the stack
-        for (var y = 0; y < 17; y++) {
-            for (var x = 0; x < 10; x++) {
-                this.ctx.save();
-                this.ctx.fillStyle = this.stack[y][x];
-                // console.log(this.stack[i][j]);
-                this.ctx.fillRect(
-                    x * this.cellSize,
-                    y * this.cellSize,
-                    this.cellSize,
-                    this.cellSize
-                );
-                this.ctx.restore();
-            }
-        }
+        this.stack.draw(this.ctx, this.cellSize);
 
         // the tetromino
         this.tetromino.draw(this.ctx, this.cellSize);

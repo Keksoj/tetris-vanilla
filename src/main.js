@@ -5,7 +5,7 @@ var cellSize = 30;
 
 const canvas = document.getElementById('canvas');
 canvas.width = 10 * cellSize + 300;
-canvas.height = 17 * cellSize;
+canvas.height = 20 * cellSize;
 var ctx = canvas.getContext('2d');
 
 var game = new Game(ctx, cellSize);

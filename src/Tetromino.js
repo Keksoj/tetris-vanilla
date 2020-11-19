@@ -86,7 +86,6 @@ export default class Tetromino {
         this.yPosition = 1;
 
         this.cells = [];
-
     }
 
     /** Place the tetromino on the top middle of the board */
@@ -94,7 +93,6 @@ export default class Tetromino {
         this.xPosition = 3;
         this.yPosition = 0;
     }
-
 
     /** take direction to move the tetromino
      * @param {String} either "up", "down", "left", "right", "turn"
@@ -183,7 +181,7 @@ export default class Tetromino {
     }
 
     /**
-     * converts the 0 and 1 grid to an array of drawable Cells
+     * converts the grid of zeros and ones into an array of drawable Cells
      */
     toCells() {
         // console.log('toCells() called');
@@ -214,5 +212,4 @@ export default class Tetromino {
 
         ctx.restore();
     }
-
 }
