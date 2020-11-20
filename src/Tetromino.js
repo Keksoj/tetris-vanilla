@@ -30,7 +30,7 @@ export default class Tetromino {
             // 0 0 1 0
             // 0 0 1 0
             binaryValues: [0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0],
-            color: 'red',
+            color: '#FF5861',
         },
         {
             name: 'S',
@@ -38,7 +38,7 @@ export default class Tetromino {
             // 1 1 0
             // 0 0 0
             binaryValues: [0, 1, 1, 1, 1, 0, 0, 0, 0],
-            color: 'green',
+            color: '#30A93E',
         },
         {
             name: 'Z',
@@ -55,7 +55,7 @@ export default class Tetromino {
             // 0 1 1 0
             // 0 0 0 0
             binaryValues: [0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0],
-            color: 'blue',
+            color: '#0033FF',
         },
         {
             name: 'L',
@@ -63,7 +63,7 @@ export default class Tetromino {
             // 0 1 0
             // 0 1 1
             binaryValues: [0, 1, 0, 0, 1, 0, 0, 1, 1],
-            color: 'purple',
+            color: '#902090',
         },
         {
             name: 'J',
@@ -71,7 +71,7 @@ export default class Tetromino {
             // 0 1 0
             // 1 1 0
             binaryValues: [0, 1, 0, 0, 1, 0, 1, 1, 0],
-            color: 'white',
+            color: '#A0B8BB',
         },
     ];
 
