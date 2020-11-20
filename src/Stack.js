@@ -1,7 +1,8 @@
-import Cell from './Tetromino.js';
+import Cell from './Cell.js';
 
 /** the pile of fixed cells
  * @property {[[String]]} rows describe each cell's color or emptyness
+ * @property {[Cell]} cells the stack as drawable cells
  */
 export default class Stack {
     constructor() {
@@ -20,6 +21,7 @@ export default class Stack {
                 'empty',
             ]);
         }
+        this.cells = [];
         // console.log(this.rows);
     }
 
@@ -37,18 +39,13 @@ export default class Stack {
         for (var i = 0; i < rowsToClear.length; i++) {
             var y = rowsToClear[i];
             while (y > 1) {
-                // if we don't perform this extra loop and do simply
-                // this.rows[y] = this.rows[y - 1]
-                // then the top rows will end up having the same… property? Writing a color on
-                // one will mean writing it on all the above rows. Good luck debugging that.
-                // If, like me, you like consistency, go learn Rust.
                 for (var x = 0; x < 10; x++) {
                     this.rows[y][x] = this.rows[y - 1][x];
                 }
                 y--;
             }
         }
-        
+
         console.log('after cleaning full rows there are ', this.rows.length, 'of them');
         return rowsToClear.length;
     }
@@ -80,21 +77,28 @@ export default class Stack {
         return false;
     }
 
+    /** converts the nested array into an array of drawable cells */
+    toCells() {
+        this.cells = [];
+        for (var y = 0; y < 20; y++) {
+            for (var x = 0; x < 10; x++) {
+                if (this.rows[y][x] !== 'empty') {
+                    this.cells.push(new Cell(x, y, this.rows[y][x]));
+                }
+            }
+        }
+    }
+
     /** draws the stack on the board
      * @param {CanvasRenderingContext2D} ctx
      * @param {Number} cellSize
      */
     draw(ctx, cellSize) {
-        for (var y = 0; y < 20; y++) {
-            for (var x = 0; x < 10; x++) {
-                if (this.rows[y][x] !== 'empty') {
-                    ctx.save();
-                    ctx.fillStyle = this.rows[y][x];
-                    // console.log(this.rows[y][x]);
-                    ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
-                    ctx.restore();
-                }
-            }
+        ctx.save();
+        this.toCells();
+        for (var i = 0; i < this.cells.length; i++) {
+            this.cells[i].draw(ctx, cellSize);
         }
+        ctx.restore();
     }
 }

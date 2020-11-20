@@ -24,3 +24,47 @@ code .
 ```
 
 And click `Go Live`. The extension will launch a little web server that listens on `localhost:5502`, and will even open the page in your favorite browser.
+
+### Javascript pros
+
+EcmaScript 6 has this amazing object-oriented syntax sugar around `prototype` that allows to define classes and methods. Combined with JSDocs we can get a _clean code with no framework_ :
+
+```js
+/**
+ * A group a four cells to move around
+ * @typedef {object} Tetromino
+ * @property {String} name
+ * @property {[Number]} binaryValues
+ * @property {String} color
+ * @property {Number} xPosition
+ * @property {Number} yPosition
+ * @property {[Cell]} cells
+ */
+export default class Tetromino {
+    // ...
+}
+```
+
+### Javascript cons
+
+This _everything-is-an-object_ feature of javascript has dire consequences on the unsuspecting programmer. When clearing full tetris rows and ticking down the pile, I wanted to shift every array element like this:
+
+```js
+this.rows[y] = this.rows[y - 1];
+```
+
+Well this somehow copies the **property** of each array element together with its value (why would we need that?). When I later wanted to assign values to a row's cell :
+
+```js
+this.rows[y][x] = 'orange';
+```
+
+I had the unpleasant surprise of seeing that `this.rows[y - 1][x]` was assigned the same value! To fix this we need to perform an extra loop :
+
+```js
+for (var x = 0; x < 10; x++) {
+    this.rows[y][x] = this.rows[y - 1][x];
+}
+```
+
+If, like me, you like consistency, [go learn Rust](https://doc.rust-lang.org/book/foreword.html).

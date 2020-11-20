@@ -31,7 +31,12 @@ export default class Cell {
     draw(ctx, cellSize) {
         ctx.save();
         ctx.fillStyle = this.color;
-        ctx.fillRect(this.x * cellSize, this.y * cellSize, cellSize, cellSize);
+        ctx.fillRect(
+            this.x * cellSize,
+            (this.y - 2) * cellSize, // hide the top 2 rows
+            cellSize,
+            cellSize
+        );
         ctx.restore();
     }
 }

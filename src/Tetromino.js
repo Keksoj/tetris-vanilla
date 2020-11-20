@@ -85,7 +85,7 @@ export default class Tetromino {
 
         // this puts the tetromino on the side for display
         this.xPosition = 11;
-        this.yPosition = 2;
+        this.yPosition = 3;
 
         this.cells = [];
     }
@@ -93,7 +93,7 @@ export default class Tetromino {
     /** Place the tetromino on the top middle of the board */
     putInGame() {
         this.xPosition = 3;
-        this.yPosition = 0;
+        this.yPosition = 1;
     }
 
     /** take direction to move the tetromino
@@ -188,11 +188,11 @@ export default class Tetromino {
     toCells() {
         // console.log('toCells() called');
         this.cells = [];
-        var squareWidth = Math.sqrt(this.binaryValues.length);
+        const squareWidth = Math.sqrt(this.binaryValues.length);
         for (var i = 0; i < this.binaryValues.length; i++) {
             if (this.binaryValues[i] === 1) {
-                var xAddition = Math.floor(i / squareWidth);
-                var yAddition = i % squareWidth;
+                const xAddition = Math.floor(i / squareWidth);
+                const yAddition = i % squareWidth;
                 this.cells.push(
                     new Cell(this.xPosition + yAddition, this.yPosition + xAddition, this.color)
                 );

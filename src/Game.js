@@ -1,6 +1,6 @@
 import Tetromino from './Tetromino.js';
 import Stack from './Stack.js';
-import { PAUSE_MESSAGES, LEVEL_TO_TICK_TIME } from './constants.js';
+import { PAUSE_MESSAGES, LEVEL_TO_TICK_TIME, SCORE_COMMENT } from './constants.js';
 import Cell from './Cell.js';
 
 /**
@@ -42,15 +42,18 @@ export default class Game {
     }
 
     pause() {
-        if (!this.onPause) {
-            clearInterval(this.ticker);
-            var rand = Math.round(Math.random() * PAUSE_MESSAGES.length);
-            var message = PAUSE_MESSAGES[rand];
-            this.displayText(`PAUSE\n${message}`);
-            this.onPause = true;
-        } else {
-            this.ticker = window.setInterval(() => this.tick(), this.ticktime);
-            this.onPause = false;
+        if (!this.isOver) {
+            if (!this.onPause) {
+                clearInterval(this.ticker);
+                var rand = Math.round(Math.random() * PAUSE_MESSAGES.length);
+                var message = PAUSE_MESSAGES[rand];
+                this.displayText('PAUSE', message, '', '(unpause with SPACE)');
+                this.onPause = true;
+            } else {
+                this.draw();
+                this.ticker = window.setInterval(() => this.tick(), this.ticktime);
+                this.onPause = false;
+            }
         }
     }
 
@@ -58,7 +61,7 @@ export default class Game {
     tick() {
         // this.clearFullRows();
         this.move('down');
-        this.draw(this.ctx, this.cellSize);
+        // this.draw(this.ctx, this.cellSize);
     }
 
     /**
@@ -66,31 +69,31 @@ export default class Game {
      * @param {String} direction
      */
     move(direction) {
-        this.tetromino.move(direction);
-        if (this.collisionOccurs() && direction === 'down') {
-            this.tetromino.reverseTheMove('down');
+        if (!this.isOver && !this.onPause) {
+            this.tetromino.move(direction);
+            if (this.collisionOccurs() && direction === 'down') {
+                this.tetromino.reverseTheMove('down');
 
-            // clear rows, up the score
-            this.stack.writeCells(this.tetromino.cells);
-            var rows = this.stack.clearFullRows();
-            this.updateTheScore(rows);
-            console.log('score:', this.score);
+                // freeze tetromino, clear rows, up the score
+                this.stack.writeCells(this.tetromino.cells);
+                var rows = this.stack.clearFullRows();
+                this.updateTheScore(rows);
 
-            // game over
-            if (this.stack.overflows()) {
-                console.log('we try to stop the game');
-                this.gameOver();
-                return;
+                // game over
+                if (this.stack.overflows()) {
+                    this.gameOver();
+                    return;
+                }
+
+                this.tetromino = this.nextTetromino;
+                this.tetromino.putInGame();
+                this.nextTetromino = new Tetromino();
+                this.tetromino.draw(this.ctx, this.cellSize);
+            } else if (this.collisionOccurs()) {
+                this.tetromino.reverseTheMove(direction);
             }
-
-            this.tetromino = this.nextTetromino;
-            this.tetromino.putInGame();
-            this.nextTetromino = new Tetromino();
-            this.tetromino.draw(this.ctx, this.cellSize);
-        } else if (this.collisionOccurs()) {
-            this.tetromino.reverseTheMove(direction);
+            this.draw(this.ctx, this.cellSize);
         }
-        this.draw(this.ctx, this.cellSize);
     }
 
     /**
@@ -164,40 +167,57 @@ export default class Game {
         console.log('game over!');
         clearInterval(this.ticker);
         var comment;
-        if (this.score >= 80) {
-            comment = 'Are you God?';
-        } else if (this.score >= 60) {
-            comment = 'Really good';
-        } else if (this.score >= 40) {
-            comment = 'Fair game';
-        } else if (this.score >= 20) {
-            comment = 'At least you tried';
-        } else if (this.score >= 0) {
-            comment = 'You are a noob';
+        for (var i = 0; i < SCORE_COMMENT.length; i++) {
+            if (this.score >= SCORE_COMMENT[i].threshold) {
+                comment = SCORE_COMMENT[i].comment;
+                break;
+            }
         }
-        var scoreWithComment = `GAME OVER\nYour score is ${this.score}.\n${comment}.`;
-        this.displayText(scoreWithComment);
-
-        // this.displayText(`Game Over.\n${scoreWithComment}\nPress Enter to restart`);
+        this.displayText('GAME OVER', `score = ${this.score}.`, comment, 'Press ENTER to restart');
     }
 
-    displayText(text) {
-        console.log(text);
+    /** displays pause or game over message
+     * @param {String} mainMessage
+     * @param {String} comment
+     * @param {String} secondcomment
+     * @param {String} typeInstruction
+     */
+    displayText(mainMessage, comment, secondcomment, typeInstruction) {
+        console.log(mainMessage, comment, typeInstruction);
         this.ctx.save();
+        this.ctx.fillStyle = 'darkslateblue';
+        this.ctx.fillRect(
+            this.cellSize * 0.5,
+            this.cellSize * 5.5,
+            this.cellSize * 15,
+            this.cellSize * 7
+        );
+        this.ctx.font = '30px monospace';
+        this.ctx.textAlign = 'center';
+        this.ctx.fillStyle = 'white';
+        this.ctx.fillText(mainMessage, canvas.width / 2, canvas.height / 2 - 40);
+        this.ctx.font = '15px monospace';
+        this.ctx.fillText(comment, canvas.width / 2, canvas.height / 2);
+        this.ctx.font = '15px monospace';
+        this.ctx.fillText(secondcomment, canvas.width / 2, canvas.height / 2 + 30);
+        this.ctx.font = '10px monospace';
+        this.ctx.fillText(typeInstruction, canvas.width / 2, canvas.height / 2 + 60);
         this.ctx.restore();
     }
 
     restart() {
         this.isOver = false;
         this.score = 0;
+        this.level = 0;
         this.stack = new Stack();
-        this.ticktime = 900;
+        this.ticktime = 887;
         var firstTetromino = new Tetromino();
         firstTetromino.putInGame();
         this.tetromino = firstTetromino;
         this.nextTetromino = new Tetromino();
         this.onPause = false;
         this.ticker = window.setInterval(() => this.tick(), this.ticktime);
+        this.draw();
     }
 
     /** draw the game
@@ -211,6 +231,13 @@ export default class Game {
         this.ctx.fillStyle = '#444';
         this.ctx.fillRect(canvas.width - 6 * this.cellSize, 0, 6 * this.cellSize, canvas.height);
         this.nextTetromino.draw(this.ctx, this.cellSize);
+        this.ctx.font = '18px monospace';
+        // this.ctx.textAlign = 'center';
+        this.ctx.fillStyle = 'white';
+
+        this.ctx.fillText(`Level ${this.level}`, 11.5 * this.cellSize, 12 * this.cellSize);
+        this.ctx.font = '30px monospace';
+        this.ctx.fillText(`${this.score}`, 12 * this.cellSize, 16 * this.cellSize);
 
         // fill the playing board
         this.ctx.fillStyle = '#145';
@@ -224,12 +251,3 @@ export default class Game {
         this.ctx.restore();
     }
 }
-
-// I would be glad to replace the gameOver() boilerplate with this:
-const SCORE_COMMENT = [
-    { threshold: 80, comment: 'Are you God?' },
-    { threshold: 60, comment: 'Really good' },
-    { threshold: 40, comment: 'Fair game' },
-    { threshold: 20, comment: 'At least you tried' },
-    { threshold: 0, comment: 'You are a noob' },
-];

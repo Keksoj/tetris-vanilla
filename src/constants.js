@@ -1,5 +1,5 @@
 export const PAUSE_MESSAGES = [
-    'Tetris was invented by Алексе́й Па́житнов',
+    'Tetris was invented by Алексе́й Па́житнов.',
     'Stop playing and stretch your neck.',
     'Strč prst skrz krk!',
     "Pas mal, non ? C'est français.",
@@ -12,8 +12,10 @@ export const PAUSE_MESSAGES = [
     'Pour la beauté du code !',
     'Pause toujours !',
     'Fun fact: an elephant has four kneels.',
-    'Mann vermisse ich Deutsch.',
+    'Kann jemand Deutsch hier?.',
     'Prenez du temps pour vous.',
+    'Ой полным полна моя коробушка…',
+    
 ];
 
 // inspired by legacy Tetris for Game Boy
@@ -41,11 +43,25 @@ export const LEVEL_TO_TICK_TIME = {
     20: 50,
 };
 
-// I would be glad to replace the gameOver() boilerplate with something like:
-const SCORE_COMMENT = [
-    { threshold: 80, comment: 'Are you God?' },
-    { threshold: 60, comment: 'Really good' },
-    { threshold: 40, comment: 'Fair game' },
-    { threshold: 20, comment: 'At least you tried' },
-    { threshold: 0, comment: 'You are a noob.' },
+export const SCORE_COMMENT = [
+    { threshold: 80000, comment: 'Are you God?' },
+    { threshold: 75000, comment: `Mais comment t'as fait?` },
+    { threshold: 70000, comment: 'We want you for president.' },
+    { threshold: 65000, comment: 'We need you for a great Europe.' },
+    { threshold: 60000, comment: 'The president is very satisfied with your work.' },
+    { threshold: 55000, comment: 'Вы хотите должность в ФСБ?' },
+    { threshold: 50000, comment: 'You get invited to embassies.' },
+    { threshold: 45000, comment: 'Trimestre satisfaisant. Continuez!' },
+    { threshold: 40000, comment: 'You get invited to partys now.' },
+    { threshold: 30000, comment: 'Résultats en nette progression.' },
+    { threshold: 25000, comment: 'Poursuivez vos efforts.' },
+    { threshold: 20000, comment: `You're on your way. Try again.` },
+    { threshold: 15000, comment: 'Vielleicht sprichst du auch Deutsch?' },
+    { threshold: 10000, comment: 'Now we start to talk.' },
+    { threshold: 5000, comment: `That's better.` },
+    { threshold: 2000, comment: `Il y a de l'idée. À creuser` },
+    { threshold: 500, comment: 'Résultats décevants ce trimestre.' },
+    { threshold: 50, comment: 'Peux mieux faire.' },
+    { threshold: 20, comment: 'Pas terrible.' },
+    { threshold: 0, comment: 'Nul.' },
 ];

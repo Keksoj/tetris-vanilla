@@ -1,11 +1,11 @@
 import Game from './Game.js';
 
 /** The width of the canvas' building cells */
-var cellSize = 30;
+var cellSize = 32;
 
 const canvas = document.getElementById('canvas');
 canvas.width = 16 * cellSize;
-canvas.height = 20 * cellSize;
+canvas.height = 18 * cellSize;
 var ctx = canvas.getContext('2d');
 
 var game = new Game(ctx, cellSize);
