@@ -61,7 +61,7 @@ export const SCORE_COMMENT = [
     { threshold: 5000, comment: `That's better.` },
     { threshold: 2000, comment: `Il y a de l'idée. À creuser.` },
     { threshold: 500, comment: 'Résultats décevants ce trimestre.' },
-    { threshold: 50, comment: 'Peux mieux faire.' },
+    { threshold: 50, comment: 'Peut mieux faire.' },
     { threshold: 20, comment: 'Pas terrible.' },
     { threshold: 0, comment: 'Nul.' },
 ];
