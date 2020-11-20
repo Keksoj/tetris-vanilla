@@ -5,17 +5,17 @@ export const PAUSE_MESSAGES = [
     "Pas mal, non ? C'est français.",
     'Embauchez-moi !',
     // Saitama-sama atama ii desu ne!
-    'サイタマ様頭いいですね!',
+    'サイタマ様は頭いいですね!',
     'Harder, better, faster, stronger.',
     "L'inventeur de Cookie Clicker s'appelle Orteil.",
     'Love it or leave it.',
     'Pour la beauté du code !',
     'Pause toujours !',
     'Fun fact: an elephant has four kneels.',
-    'Kann jemand Deutsch hier?.',
+    'Kann jemand hier Deutsch?.',
     'Prenez du temps pour vous.',
     'Ой полным полна моя коробушка…',
-    
+
 ];
 
 // inspired by legacy Tetris for Game Boy

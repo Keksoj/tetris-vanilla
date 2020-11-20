@@ -209,6 +209,7 @@ export default class Game {
         this.isOver = false;
         this.score = 0;
         this.level = 0;
+        this.lines = 0;
         this.stack = new Stack();
         this.ticktime = 887;
         var firstTetromino = new Tetromino();
