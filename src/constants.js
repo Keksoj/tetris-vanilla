@@ -59,7 +59,7 @@ export const SCORE_COMMENT = [
     { threshold: 15000, comment: 'Vielleicht sprichst du auch Deutsch?' },
     { threshold: 10000, comment: 'Now we start to talk.' },
     { threshold: 5000, comment: `That's better.` },
-    { threshold: 2000, comment: `Il y a de l'idée. À creuser` },
+    { threshold: 2000, comment: `Il y a de l'idée. À creuser.` },
     { threshold: 500, comment: 'Résultats décevants ce trimestre.' },
     { threshold: 50, comment: 'Peux mieux faire.' },
     { threshold: 20, comment: 'Pas terrible.' },

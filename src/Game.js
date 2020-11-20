@@ -238,7 +238,9 @@ export default class Game {
 
         this.ctx.fillText(`Level ${this.level}`, 11.5 * this.cellSize, 12 * this.cellSize);
         this.ctx.font = '30px monospace';
-        this.ctx.fillText(`${this.score}`, 12 * this.cellSize, 16 * this.cellSize);
+        this.ctx.fillText(`${this.score}`, 12 * this.cellSize, 15 * this.cellSize);
+        this.ctx.font = '10px monospace'
+        this.ctx.fillText(`Press [SPACE] for pause`, 10.5 * this.cellSize, 17 * this.cellSize);
 
         // fill the playing board
         this.ctx.fillStyle = '#145';
