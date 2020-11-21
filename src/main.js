@@ -25,13 +25,14 @@ document.onkeydown = (event) => {
         case 'ArrowDown':
             game.move('down');
             break;
-        case ' ':
+        case 'p':
             game.pause();
+            break;
+        case ' ':
+            game.hardDrop();
             return;
         case 'Enter':
-            if (game.isOver) {
-                game.restart();
-            }
+            game.restart();
             break;
         default:
             return;

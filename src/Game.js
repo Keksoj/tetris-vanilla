@@ -6,6 +6,8 @@ import Cell from './Cell.js';
 /**
  * The all-encompassing object to describe the game state
  * @property {Number} score
+ * @property {Number} lines
+ * @property {Number} level
  * @property {Number} tickTime
  * @property {Number} cellSize
  * @property {Tetromino} tetromino
@@ -45,9 +47,8 @@ export default class Game {
         if (!this.isOver) {
             if (!this.onPause) {
                 clearInterval(this.ticker);
-                var rand = Math.round(Math.random() * PAUSE_MESSAGES.length);
-                var message = PAUSE_MESSAGES[rand];
-                this.displayText('PAUSE', message, '', '(unpause with SPACE)');
+                var message = PAUSE_MESSAGES[Math.round(Math.random() * PAUSE_MESSAGES.length)];
+                this.displayMessage('PAUSE', message, '', '(press P to unpause)');
                 this.onPause = true;
             } else {
                 this.draw();
@@ -73,30 +74,50 @@ export default class Game {
             this.tetromino.move(direction);
             if (this.collisionOccurs() && direction === 'down') {
                 this.tetromino.reverseTheMove('down');
-
-                // freeze tetromino, clear rows, up the score
-                this.stack.writeCells(this.tetromino.cells);
-                var rows = this.stack.clearFullRows();
-                this.updateTheScore(rows);
-
-                // game over
-                if (this.stack.overflows()) {
-                    this.gameOver();
-                    return;
-                }
-
-                this.tetromino = this.nextTetromino;
-                this.tetromino.putInGame();
-                this.nextTetromino = new Tetromino();
-                this.tetromino.draw(this.ctx, this.cellSize);
+                this.lockAndNext();
             } else if (this.collisionOccurs()) {
                 this.tetromino.reverseTheMove(direction);
+            } else {
+
+                this.draw(this.ctx, this.cellSize);
             }
-            this.draw(this.ctx, this.cellSize);
         }
     }
 
-    /**
+    hardDrop() {
+        var hitBottom = false;
+        while (!hitBottom) {
+            this.tetromino.move('down');
+            if (this.collisionOccurs()) {
+                this.tetromino.reverseTheMove('down');
+                hitBottom = true;
+            }
+        }
+        this.draw(this.ctx, this.cellSize);
+        this.lockAndNext();
+
+    }
+
+    /** Lock the tetromino, clear rows, update the score, next Tetromino */
+    lockAndNext() {
+        // freeze tetromino, clear rows, up the score
+        this.stack.writeCells(this.tetromino.cells);
+        var rows = this.stack.clearFullRows();
+        this.updateTheScore(rows);
+
+        // game over
+        if (this.stack.overflows()) {
+            this.gameOver();
+            return;
+        }
+
+        this.tetromino = this.nextTetromino;
+        this.tetromino.putInGame();
+        this.nextTetromino = new Tetromino();
+        this.tetromino.draw(this.ctx, this.cellSize);
+    }
+
+    /** updates score and tickTime
      * @param {Number} rows Number of rows cleared at a time
      */
     updateTheScore(rows) {
@@ -120,17 +141,6 @@ export default class Game {
 
         clearInterval(this.ticker);
         this.ticker = window.setInterval(() => this.tick(), this.ticktime);
-
-        console.log(
-            'lines:',
-            this.lines,
-            '  level:',
-            this.level,
-            ' score:',
-            this.score,
-            `tick time:`,
-            this.ticktime
-        );
     }
 
     /** Check for collisions with walls, with the bottom, with the stack
@@ -173,7 +183,12 @@ export default class Game {
                 break;
             }
         }
-        this.displayText('GAME OVER', `score = ${this.score}.`, comment, 'Press ENTER to restart');
+        this.displayMessage(
+            'GAME OVER',
+            `score = ${this.score}.`,
+            comment,
+            'Press ENTER to restart'
+        );
     }
 
     /** displays pause or game over message
@@ -182,7 +197,7 @@ export default class Game {
      * @param {String} secondcomment
      * @param {String} typeInstruction
      */
-    displayText(mainMessage, comment, secondcomment, typeInstruction) {
+    displayMessage(mainMessage, comment, secondcomment, typeInstruction) {
         console.log(mainMessage, comment, typeInstruction);
         this.ctx.save();
         this.ctx.fillStyle = 'darkslateblue';
@@ -206,19 +221,21 @@ export default class Game {
     }
 
     restart() {
-        this.isOver = false;
-        this.score = 0;
-        this.level = 0;
-        this.lines = 0;
-        this.stack = new Stack();
-        this.ticktime = 887;
-        var firstTetromino = new Tetromino();
-        firstTetromino.putInGame();
-        this.tetromino = firstTetromino;
-        this.nextTetromino = new Tetromino();
-        this.onPause = false;
-        this.ticker = window.setInterval(() => this.tick(), this.ticktime);
-        this.draw();
+        if (this.isOver) {
+            this.isOver = false;
+            this.score = 0;
+            this.level = 0;
+            this.lines = 0;
+            this.stack = new Stack();
+            this.ticktime = 887;
+            var firstTetromino = new Tetromino();
+            firstTetromino.putInGame();
+            this.tetromino = firstTetromino;
+            this.nextTetromino = new Tetromino();
+            this.onPause = false;
+            this.ticker = window.setInterval(() => this.tick(), this.ticktime);
+            this.draw();
+        }
     }
 
     /** draw the game
@@ -233,14 +250,15 @@ export default class Game {
         this.ctx.fillRect(canvas.width - 6 * this.cellSize, 0, 6 * this.cellSize, canvas.height);
         this.nextTetromino.draw(this.ctx, this.cellSize);
         this.ctx.font = '18px monospace';
-        // this.ctx.textAlign = 'center';
+        this.ctx.textAlign = 'center';
         this.ctx.fillStyle = 'white';
 
-        this.ctx.fillText(`Level ${this.level}`, 11.5 * this.cellSize, 12 * this.cellSize);
+        this.ctx.fillText(`Level ${this.level}`, 13 * this.cellSize, 12 * this.cellSize);
         this.ctx.font = '30px monospace';
-        this.ctx.fillText(`${this.score}`, 12 * this.cellSize, 15 * this.cellSize);
-        this.ctx.font = '10px monospace'
-        this.ctx.fillText(`Press [SPACE] for pause`, 10.5 * this.cellSize, 17 * this.cellSize);
+        this.ctx.fillText(`${this.score}`, 13 * this.cellSize, 14 * this.cellSize);
+        this.ctx.font = '10px monospace';
+        this.ctx.fillText(`Press [SPACE] for harddrop`, 13 * this.cellSize, 16 * this.cellSize);
+        this.ctx.fillText(`Press P for pause`, 13 * this.cellSize, 17 * this.cellSize);
 
         // fill the playing board
         this.ctx.fillStyle = '#145';
