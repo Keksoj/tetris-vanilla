@@ -60,9 +60,7 @@ export default class Game {
 
     /** perform a tick down and all the logic */
     tick() {
-        // this.clearFullRows();
         this.move('down');
-        // this.draw(this.ctx, this.cellSize);
     }
 
     /**
@@ -74,7 +72,7 @@ export default class Game {
             this.tetromino.move(direction);
             if (this.collisionOccurs() && direction === 'down') {
                 this.tetromino.reverseTheMove('down');
-                this.lockAndNext();
+                this.lockTetromino();
             } else if (this.collisionOccurs()) {
                 this.tetromino.reverseTheMove(direction);
             } else {
@@ -85,33 +83,43 @@ export default class Game {
 
     /** Drops the tetromino all the way down */
     hardDrop() {
-        var hitBottom = false;
-        while (!hitBottom) {
-            this.tetromino.move('down');
-            if (this.collisionOccurs()) {
-                this.tetromino.reverseTheMove('down');
-                hitBottom = true;
+        if (!this.onPause && !this.isOver) {
+            var hitBottom = false;
+            while (!hitBottom) {
+                this.tetromino.move('down');
+                this.draw(this.ctx, this.cellSize);
+                if (this.collisionOccurs()) {
+                    this.tetromino.reverseTheMove('down');
+                    hitBottom = true;
+                }
             }
+            this.draw(this.ctx, this.cellSize);
+            this.lockTetromino();
         }
-        this.draw(this.ctx, this.cellSize);
-        this.lockAndNext();
     }
 
-    /** Lock the tetromino, clear rows, update the score, next Tetromino */
-    lockAndNext() {
-        this.stack.writeCells(this.tetromino.cells);
-        var rows = this.stack.clearFullRows();
-        this.updateTheScore(rows);
+    /** Lock the tetromino, clear rows, update the score */
+    lockTetromino() {
+        if (!this.onPause && !this.isOver) {
+            this.stack.writeCells(this.tetromino.cells);
+            var rows = this.stack.clearFullRows();
+            this.updateTheScore(rows);
 
-        if (this.stack.overflows()) {
-            this.gameOver();
-            return;
+            if (this.stack.overflows()) {
+                this.gameOver();
+                return;
+            } else {
+                this.newTetromino();
+                this.draw();
+            }
         }
+    }
 
+    newTetromino() {
         this.tetromino = this.nextTetromino;
         this.tetromino.putInGame();
         this.nextTetromino = new Tetromino();
-        this.draw(this.ctx, this.cellSize);
+        this.draw();
     }
 
     /** updates score and tickTime
@@ -210,9 +218,8 @@ export default class Game {
         this.ctx.fillText(mainMessage, canvas.width / 2, canvas.height / 2 - 40);
         this.ctx.font = '15px monospace';
         this.ctx.fillText(comment, canvas.width / 2, canvas.height / 2);
-        this.ctx.font = '15px monospace';
         this.ctx.fillText(secondcomment, canvas.width / 2, canvas.height / 2 + 30);
-        this.ctx.font = '10px monospace';
+        this.ctx.font = '13px monospace';
         this.ctx.fillText(typeInstruction, canvas.width / 2, canvas.height / 2 + 60);
         this.ctx.restore();
     }

@@ -45,8 +45,6 @@ export default class Stack {
                 y--;
             }
         }
-
-        console.log('after cleaning full rows there are ', this.rows.length, 'of them');
         return rowsToClear.length;
     }
 
