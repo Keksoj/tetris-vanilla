@@ -15,7 +15,6 @@ export const PAUSE_MESSAGES = [
     'Kann jemand hier Deutsch?.',
     'Prenez du temps pour vous.',
     'Ой полным полна моя коробушка…',
-
 ];
 
 // inspired by legacy Tetris for Game Boy
@@ -44,6 +43,10 @@ export const LEVEL_TO_TICK_TIME = {
 };
 
 export const SCORE_COMMENT = [
+    { threshold: 100000, comment: 'Please teach me the meaning of life.' },
+    { threshold: 95000, comment: 'You are the matrix.' },
+    { threshold: 90000, comment: 'You can rewrite the matrix source code.' },
+    { threshold: 85000, comment: 'You can read the matrix source code now.' },
     { threshold: 80000, comment: 'Are you God?' },
     { threshold: 75000, comment: `Mais comment t'as fait?` },
     { threshold: 70000, comment: 'We want you for president.' },

@@ -100,7 +100,6 @@ export default class Game {
 
     /** Lock the tetromino, clear rows, update the score */
     lockTetromino() {
-        if (!this.onPause && !this.isOver) {
             this.stack.writeCells(this.tetromino.cells);
             var rows = this.stack.clearFullRows();
             this.updateTheScore(rows);
@@ -112,7 +111,6 @@ export default class Game {
                 this.newTetromino();
                 this.draw();
             }
-        }
     }
 
     newTetromino() {
