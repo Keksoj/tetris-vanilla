@@ -30,6 +30,7 @@ export default class Cell {
      */
     draw(ctx, cellSize) {
         ctx.save();
+
         ctx.fillStyle = this.color;
         ctx.fillRect(
             this.x * cellSize,
@@ -37,6 +38,25 @@ export default class Cell {
             cellSize,
             cellSize
         );
+        
+        // // draw the border
+        // ctx.fillStyle = 'black';
+        // ctx.fillRect(
+        //     this.x * cellSize,
+        //     (this.y - 2) * cellSize, // hide the top 2 rows
+        //     cellSize,
+        //     cellSize
+        // );
+        // // draw the inside
+        // ctx.fillStyle = this.color;
+        // var borderThickness = 1; // pixels
+        // ctx.fillRect(
+        //     this.x * cellSize + borderThickness,
+        //     (this.y - 2) * cellSize + borderThickness, // hide the top 2 rows
+        //     cellSize - 2 * borderThickness,
+        //     cellSize - 2 * borderThickness
+        // );
+
         ctx.restore();
     }
 }
