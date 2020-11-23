@@ -42,6 +42,11 @@ export default class Game {
         this.startAsyncTicker();
     }
 
+    OnUpdate(time, deltaTime)
+    {
+        // console.log({time: time, deltaTime: deltaTime})
+    }
+
     async startAsyncTicker() {
         this.ticker = await window.setInterval(() => this.tick(), this.ticktime);
     }

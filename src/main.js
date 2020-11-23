@@ -9,6 +9,18 @@ canvas.height = 18 * cellSize;
 var ctx = canvas.getContext('2d');
 
 var game = new Game(ctx, cellSize);
+
+var lastTime = 0;
+
+function UpdateGame(time)
+{
+    game.OnUpdate(time, time - lastTime)
+    lastTime = time
+    window.requestAnimationFrame(UpdateGame)
+}
+
+window.requestAnimationFrame(UpdateGame)
+
 // game.tick();
 
 document.onkeydown = (event) => {
