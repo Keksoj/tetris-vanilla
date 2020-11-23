@@ -29,6 +29,19 @@ export default class Game {
         this.ctx = ctx;
         this.ticktime = 887;
         this.cellSize = cellSize;
+        this.leftArrow = false;
+
+        this.keyBuffer = [
+            { key: 'p', isPressed: false },
+            { key: '', isPressed: false },
+            { key: 'p', isPressed: false },
+            { key: 'p', isPressed: false },
+            { key: 'p', isPressed: false },
+            { key: 'p', isPressed: false },
+            { key: 'p', isPressed: false },
+        ];
+
+        this.left;
 
         this.stack = new Stack();
 
@@ -40,7 +53,20 @@ export default class Game {
         this.onPause = false;
         this.isOver = false;
         this.startAsyncTicker();
+        // window.requestAnimationFrame(this.update(this.ticktime));
     }
+
+    update(time, deltaTime) {
+        // console.log({time: time, deltaTime: deltaTime});
+    }
+
+    addPushedKey(eventKey) {
+        this.keyBuffer.push(eventKey);
+        this.eventKey = true;
+    }
+    // keyIsReleased(eventKey) {
+    //     this.
+    // }
 
     async startAsyncTicker() {
         this.ticker = await window.setInterval(() => this.tick(), this.ticktime);

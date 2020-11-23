@@ -11,19 +11,19 @@ var ctx = canvas.getContext('2d');
 var game = new Game(ctx, cellSize);
 // game.tick();
 
-document.onkeydown = (event) => {
-    console.log(event);
+document.onkeypress = (event) => {
+    // console.log(event.key);
     switch (event.key) {
-        case 'ArrowLeft':
+        case 't':
             game.move('left');
             break;
-        case 'ArrowUp':
+        case 'd':
             game.move('turn');
             break;
-        case 'ArrowRight':
+        case 'r':
             game.move('right');
             break;
-        case 'ArrowDown':
+        case 's':
             game.move('down');
             break;
         case 'p':
@@ -39,3 +39,23 @@ document.onkeydown = (event) => {
             return;
     }
 };
+
+document.addEventListener('keydown', function (event) {
+    console.log(event.key);
+    game.addPushedKey(event.key);
+});
+document.addEventListener('keyup', function (event) {
+    console.log(game.arrowUpIsDown);
+    game.keyIsReleased(event.key);
+});
+
+var lastTime = 0;
+
+function update(time)
+{
+    game.update(time, time - lastTime);
+    lastTime = time;
+    window.requestAnimationFrame(update);
+}
+
+window.requestAnimationFrame(update);
