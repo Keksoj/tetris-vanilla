@@ -12,6 +12,7 @@ var game = new Game(ctx, cellSize);
 // game.tick();
 
 document.onkeydown = (event) => {
+    console.log(event);
     switch (event.key) {
         case 'ArrowLeft':
             game.move('left');

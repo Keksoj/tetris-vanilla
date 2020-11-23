@@ -39,11 +39,14 @@ export default class Game {
         this.nextTetromino = new Tetromino();
         this.onPause = false;
         this.isOver = false;
-
-        this.ticker = window.setInterval(() => this.tick(), this.ticktime);
+        this.startAsyncTicker();
     }
 
-    pause() {
+    async startAsyncTicker() {
+        this.ticker = await window.setInterval(() => this.tick(), this.ticktime);
+    }
+
+    async pause() {
         if (!this.isOver) {
             if (!this.onPause) {
                 clearInterval(this.ticker);
@@ -81,8 +84,12 @@ export default class Game {
         }
     }
 
+    async sleep(milliseconds) {
+        return new Promise((resolve) => setTimeout(resolve, milliseconds));
+    }
+
     /** Drops the tetromino all the way down */
-    hardDrop() {
+    async hardDrop() {
         if (!this.onPause && !this.isOver) {
             var hitBottom = false;
             while (!hitBottom) {
@@ -92,25 +99,26 @@ export default class Game {
                     this.tetromino.reverseTheMove('down');
                     hitBottom = true;
                 }
+                await this.sleep(10);
+                this.draw(this.ctx, this.cellSize);
             }
-            this.draw(this.ctx, this.cellSize);
             this.lockTetromino();
         }
     }
 
     /** Lock the tetromino, clear rows, update the score */
-    lockTetromino() {
-            this.stack.writeCells(this.tetromino.cells);
-            var rows = this.stack.clearFullRows();
-            this.updateTheScore(rows);
+    async lockTetromino() {
+        this.stack.writeCells(this.tetromino.cells);
+        var rows = await this.stack.clearFullRows();
+        this.updateTheScore(rows);
 
-            if (this.stack.overflows()) {
-                this.gameOver();
-                return;
-            } else {
-                this.newTetromino();
-                this.draw();
-            }
+        if (this.stack.overflows()) {
+            this.gameOver();
+            return;
+        } else {
+            this.newTetromino();
+            this.draw();
+        }
     }
 
     newTetromino() {

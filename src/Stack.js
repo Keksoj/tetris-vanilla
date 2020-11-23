@@ -28,7 +28,7 @@ export default class Stack {
     /** Clear up full rows, push down the stack, return the score bonus
      * @returns {Number} the number of cleared rows
      */
-    clearFullRows() {
+    async clearFullRows() {
         let rowsToClear = [];
         for (var y = 0; y < 20; y++) {
             if (!this.rows[y].includes('empty')) {
@@ -44,8 +44,14 @@ export default class Stack {
                 }
                 y--;
             }
+            await this.sleep(100);
+            
         }
         return rowsToClear.length;
+    }
+
+    async sleep(milliseconds) {
+        return new Promise((resolve) => setTimeout(resolve, milliseconds));
     }
 
     /** Write the tetromino colors onto the stack
