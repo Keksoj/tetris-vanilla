@@ -76,7 +76,7 @@ export default class Tetromino {
     ];
 
     constructor() {
-        var randomPicker = Math.round(Math.random() * 6);
+        var randomPicker = Math.floor(Math.random() * 7);
         // var randomPicker = 1;
 
         this.name = this.tetrominoes[randomPicker].name;
