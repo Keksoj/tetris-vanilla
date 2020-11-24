@@ -34,7 +34,7 @@ export default class KeyboardManager {
     async fillBuffer() {
         for (var i = 0; i < this.pressedKeys.length; i++) {
             if (this.pressedKeys[i].pressed) {
-                await this.sleep(200);
+                // await this.sleep(200);
                 this.buffer.push(this.pressedKeys[i].move);
 
                 console.log("the keyboard buffer:", this.buffer);
