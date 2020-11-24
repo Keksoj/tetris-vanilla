@@ -25,11 +25,11 @@ export default class Tetromino {
         },
         {
             name: 'I',
-            // 0 0 1 0
-            // 0 0 1 0
-            // 0 0 1 0
-            // 0 0 1 0
-            binaryValues: [0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0],
+            // 0 0 0 0
+            // 0 0 0 0
+            // 1 1 1 1
+            // 0 0 0 0
+            binaryValues: [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0],
             color: '#FF5861',
         },
         {
@@ -59,18 +59,18 @@ export default class Tetromino {
         },
         {
             name: 'L',
-            // 0 1 0
-            // 0 1 0
-            // 0 1 1
-            binaryValues: [0, 1, 0, 0, 1, 0, 0, 1, 1],
+            // 0 0 1
+            // 1 1 1
+            // 0 0 0
+            binaryValues: [0, 0, 1, 1, 1, 1, 0, 0, 0],
             color: '#902090',
         },
         {
             name: 'J',
-            // 0 1 0
-            // 0 1 0
-            // 1 1 0
-            binaryValues: [0, 1, 0, 0, 1, 0, 1, 1, 0],
+            // 1 0 0
+            // 1 1 1
+            // 0 0 0
+            binaryValues: [1, 0, 0, 1, 1, 1, 0, 0, 0],
             color: '#A0B8BB',
         },
     ];
@@ -159,7 +159,6 @@ export default class Tetromino {
         if (this.binaryValues.length === 9) {
             swap(this.binaryValues, 0, 6, 8, 2);
             swap(this.binaryValues, 1, 3, 7, 5);
-            console.log('flat I');
         } else if (this.name === 'I') {
             // Turning the I-shape tetromino within the 4 x 4 grid feels unnatural.
             // We have to hardcode the legacy behaviour that switches between
