@@ -12,19 +12,18 @@ var game = new Game(ctx, cellSize);
 
 var lastTime = 0;
 
-function UpdateGame(time)
-{
-    game.OnUpdate(time, time - lastTime)
-    lastTime = time
-    window.requestAnimationFrame(UpdateGame)
+async function UpdateGame(time) {
+    game.OnUpdate(time, time - lastTime);
+    lastTime = time;
+    window.requestAnimationFrame(UpdateGame);
 }
 
-window.requestAnimationFrame(UpdateGame)
+window.requestAnimationFrame(UpdateGame);
 
 // game.tick();
 
 document.onkeydown = (event) => {
-    console.log(event);
+    // console.log(event);
     switch (event.key) {
         case 'ArrowLeft':
             game.move('left');
@@ -50,4 +49,14 @@ document.onkeydown = (event) => {
         default:
             return;
     }
+};
+
+document.onkeypress = (event) => {
+    console.log('push', event);
+    game.keyboardManager.getKeyPress(event.key);
+};
+
+document.onkeyup = (event) => {
+    console.log('release:', event);
+    game.keyboardManager.getKeyRelease(event.key);
 };

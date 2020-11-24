@@ -1,5 +1,6 @@
 import Tetromino from './Tetromino.js';
 import Stack from './Stack.js';
+import KeyboardManager from './KeyboardManager.js';
 import { PAUSE_MESSAGES, LEVEL_TO_TICK_TIME, SCORE_COMMENT } from './constants.js';
 import Cell from './Cell.js';
 
@@ -29,6 +30,7 @@ export default class Game {
         this.ctx = ctx;
         this.ticktime = 887;
         this.cellSize = cellSize;
+        this.keyboardManager = new KeyboardManager();
 
         this.stack = new Stack();
 
@@ -42,13 +44,19 @@ export default class Game {
         this.startAsyncTicker();
     }
 
-    OnUpdate(time, deltaTime)
-    {
+    async OnUpdate(time, deltaTime) {
         // console.log({time: time, deltaTime: deltaTime})
+        await this.keyboardManager.fillBuffer();
+        this.move(this.keyboardManager.consumeBuffer());
     }
 
     async startAsyncTicker() {
         this.ticker = await window.setInterval(() => this.tick(), this.ticktime);
+    }
+
+    /** perform a tick down and all the logic */
+    tick() {
+        this.move('down');
     }
 
     async pause() {
@@ -64,11 +72,6 @@ export default class Game {
                 this.onPause = false;
             }
         }
-    }
-
-    /** perform a tick down and all the logic */
-    tick() {
-        this.move('down');
     }
 
     /**
@@ -127,6 +130,7 @@ export default class Game {
     }
 
     newTetromino() {
+        this.keyboardManager.clearBuffer();
         this.tetromino = this.nextTetromino;
         this.tetromino.putInGame();
         this.nextTetromino = new Tetromino();
