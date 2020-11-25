@@ -2,6 +2,8 @@
 
 An object-oriented implementation of the Tetris game, written in pure JavaScript.
 
+![screenshot](./og_image.jpg)
+
 ## Purpose
 
 -   learn to use this [canvas thing](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API)
