@@ -42,8 +42,7 @@ export default class Game {
         this.startAsyncTicker();
     }
 
-    OnUpdate(time, deltaTime)
-    {
+    OnUpdate(time, deltaTime) {
         // console.log({time: time, deltaTime: deltaTime})
     }
 
@@ -52,17 +51,17 @@ export default class Game {
     }
 
     async pause() {
-        if (!this.isOver) {
-            if (!this.onPause) {
-                clearInterval(this.ticker);
-                var message = PAUSE_MESSAGES[Math.round(Math.random() * PAUSE_MESSAGES.length)];
-                this.displayMessage('PAUSE', message, '', '(press P to unpause)');
-                this.onPause = true;
-            } else {
-                this.draw();
-                this.ticker = window.setInterval(() => this.tick(), this.ticktime);
-                this.onPause = false;
-            }
+        if (this.isOver) return;
+
+        if (!this.onPause) {
+            clearInterval(this.ticker);
+            var message = PAUSE_MESSAGES[Math.round(Math.random() * PAUSE_MESSAGES.length)];
+            this.displayMessage('PAUSE', message, '', '(press P to unpause)');
+            this.onPause = true;
+        } else {
+            this.draw();
+            this.ticker = window.setInterval(() => this.tick(), this.ticktime);
+            this.onPause = false;
         }
     }
 

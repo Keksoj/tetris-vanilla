@@ -15,7 +15,7 @@ An object-oriented implementation of the Tetris game, written in pure JavaScript
 
 ## How to launch with VS Code `live server extension`
 
-Most browsers won't allow file imports, for cross-origin requests reasons, so we got to access the entry point from a web server. However we don't want to configure apache or nginx just for developement purposes. I sujest you use the VScode [live server extemsion](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer).
+Most browsers won't allow file imports, for cross-origin requests reasons, so we got to access the entry point from a web server. However we don't want to configure apache or nginx just for developement purposes. I suggest you use the VScode [live server extemsion](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer).
 
 First of all clone this repo:
 
