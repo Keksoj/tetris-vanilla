@@ -49,7 +49,7 @@ export default class Tetromino {
 
 ### Javascript cons
 
-This _everything-is-an-object_ feature of javascript has dire consequences on the unsuspecting programmer. When clearing full tetris rows and ticking down the pile, I wanted to shift every array element like this:
+This _everything-is-an-object_ feature of javascript has unforgiving consequences on the unsuspecting programmer. When clearing full tetris rows and ticking down the pile, I wanted to shift every array element like this:
 
 ```js
 this.rows[y] = this.rows[y - 1];
