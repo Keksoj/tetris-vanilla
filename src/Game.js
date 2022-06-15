@@ -83,7 +83,7 @@ export default class Game {
             } else if (this.collisionOccurs()) {
                 this.tetromino.reverseTheMove(direction);
             } else {
-                this.draw(this.ctx, this.cellSize);
+                this.draw();
             }
         }
     }
@@ -101,10 +101,10 @@ export default class Game {
                 if (this.collisionOccurs()) {
                     this.tetromino.reverseTheMove('down');
                     this.lockTetromino();
-                    this.draw(this.ctx, this.cellSize);
+                    this.draw();
                     return;
                 }
-                this.draw(this.ctx, this.cellSize);
+                this.draw();
                 await this.sleep(10);
             }
         }
