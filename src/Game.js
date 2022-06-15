@@ -95,18 +95,18 @@ export default class Game {
     /** Drops the tetromino all the way down */
     async hardDrop() {
         if (!this.onPause && !this.isOver) {
-            var hitBottom = false;
-            while (!hitBottom) {
+            console.log("hard drop")
+            while (true) {
                 this.tetromino.move('down');
-                this.draw(this.ctx, this.cellSize);
                 if (this.collisionOccurs()) {
                     this.tetromino.reverseTheMove('down');
-                    hitBottom = true;
+                    this.lockTetromino();
+                    this.draw(this.ctx, this.cellSize);
+                    return;
                 }
-                await this.sleep(10);
                 this.draw(this.ctx, this.cellSize);
+                await this.sleep(10);
             }
-            this.lockTetromino();
         }
     }
 
