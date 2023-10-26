@@ -14,6 +14,9 @@ import Cell from './Cell.js';
  * @property {Tetromino} nextTetromino
  * @property {Stack} stack
  * @property {Boolean} onPause
+ * Clearing takes time for esthetic purposes.
+ * No tick should accur while clearing the rows, or the game gets messed up.
+ * @property {Boolean} clearingRows
  * @property {Boolean} isOver
  
  */
@@ -38,6 +41,7 @@ export default class Game {
 
         this.nextTetromino = new Tetromino();
         this.onPause = false;
+        this.clearingRows = false;
         this.isOver = false;
         this.startAsyncTicker();
     }
@@ -67,6 +71,10 @@ export default class Game {
 
     /** perform a tick down and all the logic */
     tick() {
+        if (this.clearingRows) {
+            // do NOT move anything while rows get clear. You hear me?
+            return;
+        }
         this.move('down');
     }
 
@@ -113,8 +121,10 @@ export default class Game {
     /** Lock the tetromino, clear rows, update the score */
     async lockTetromino() {
         this.stack.writeCells(this.tetromino.cells);
-        var rows = await this.stack.clearFullRows();
-        this.updateTheScore(rows);
+        this.clearingRows = true;
+        var rowsCleared = await this.stack.clearFullRows();
+        this.clearingRows = false;
+        this.updateTheScore(rowsCleared);
 
         if (this.stack.overflows()) {
             this.gameOver();
